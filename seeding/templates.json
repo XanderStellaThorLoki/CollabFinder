@@ -1,0 +1,235 @@
+{
+  "_comment": "Per-channel message template pools. {kw} slots are filled from the channel's keyword pool by corpus_builder.py. 'threads' are started by channel experts and replied to by others; 'questions' are asked by non-experts and answered by experts; 'chatter' is standalone filler from anyone active in the channel.",
+  "channels": {
+    "legal-compliance": {
+      "keywords": ["GDPR", "data retention", "DPA review", "consent management", "right-to-erasure", "SCCs", "privacy impact assessment", "cookie policy", "data processing agreement", "subject access request"],
+      "threads": [
+        "Heads up team — new guidance on {kw} landed this morning. Summary in thread.",
+        "I've finished the quarterly review of our {kw} process. Three findings worth discussing.",
+        "Reminder: any new vendor touching EU data needs a {kw} before contracts go out.",
+        "Draft policy update for {kw} is ready for comments. Please review by Friday.",
+        "We got a {kw} from a customer today — walking through our response process in thread for visibility."
+      ],
+      "questions": [
+        "Quick one — does {kw} apply if the data never leaves the EU?",
+        "Who can sanity-check a clause about {kw} in the Acme contract?",
+        "Is there a template for {kw} somewhere? Customer is asking.",
+        "How long does a {kw} usually take end to end?"
+      ],
+      "answers": [
+        "Short answer: yes, but it depends on the retention schedule. The {kw} doc in the drive covers this exact case.",
+        "I handled this last quarter — the key is documenting the lawful basis first. Happy to walk you through it.",
+        "Send it my way, I'll review it today. We updated our {kw} standard last month so use the new template.",
+        "Good question — wrote up the process here so we stop re-answering it. TL;DR: five working days if legal isn't blocked."
+      ],
+      "chatter": [
+        "FYI the ICO published new enforcement stats today. Nothing alarming for us.",
+        "Renewal paperwork for our {kw} tooling is done.",
+        "Flagging that the {kw} training is due for everyone by end of month."
+      ]
+    },
+    "frontend": {
+      "keywords": ["React server components", "accessibility audit", "design tokens", "bundle size", "Core Web Vitals", "Storybook", "TypeScript migration", "CSS grid", "hydration errors", "component library"],
+      "threads": [
+        "Finished the {kw} work on the dashboard — before/after numbers in thread.",
+        "Proposal: we adopt {kw} for the settings redesign. Reasoning below.",
+        "Post-mortem on yesterday's {kw} issue in prod. Root cause was interesting.",
+        "I've set up {kw} for the new components. Guide in thread.",
+        "The {kw} results are in — we have work to do. Prioritised list below."
+      ],
+      "questions": [
+        "Anyone hit weird {kw} behaviour on Safari?",
+        "What's our current approach to {kw}? Docs seem stale.",
+        "Is {kw} worth it for a page that renders server-side anyway?",
+        "Who owns the {kw} setup? Getting a config error locally."
+      ],
+      "answers": [
+        "Yeah, this bit us in March. The fix is pinning the version and clearing the cache — see the {kw} readme.",
+        "Docs are stale, the real pattern is in the checkout flow code. I'll update the docs today.",
+        "Depends on interaction density — for that page I'd skip it. Happy to pair on it.",
+        "That's mine — you need the env flag set. DMing you the setup."
+      ],
+      "chatter": [
+        "New Chrome devtools release has a great flame chart view for {kw}.",
+        "Design sync moved to Thursday this week.",
+        "PSA: prettier config updated, re-run install."
+      ]
+    },
+    "data-eng": {
+      "keywords": ["BigQuery partitioning", "dbt models", "Airflow DAG", "data quality checks", "schema migration", "streaming inserts", "cost optimisation", "dataset permissions", "incremental models", "event pipeline"],
+      "threads": [
+        "The {kw} refactor is live. Query costs down 40% — details in thread.",
+        "Wrote up our approach to {kw} after last week's incident.",
+        "New {kw} conventions doc — please read before adding tables.",
+        "Migrating the {kw} this weekend. Downtime plan in thread.",
+        "Deep dive: why our {kw} was silently dropping rows and how we caught it."
+      ],
+      "questions": [
+        "What's the right pattern for {kw} when the source table is append-only?",
+        "Who can grant me access to the {kw}?",
+        "Is there a reason the {kw} runs at 3am UTC? It collides with the export.",
+        "How do we handle late-arriving data in the {kw}?"
+      ],
+      "answers": [
+        "Use the incremental pattern with a 3-day lookback window — the {kw} doc has the exact config.",
+        "Done — you should have access now. Added you to the group rather than a one-off grant.",
+        "Historical reasons, and yes we should move it. I'll reschedule after checking the downstream jobs.",
+        "Watermark column plus a reconciliation job. I built one for events last year — reusable."
+      ],
+      "chatter": [
+        "BigQuery added a new {kw} feature in preview — looks promising.",
+        "Reminder: tag your datasets with an owner or the cleanup job flags them.",
+        "Monthly data platform costs are in — trending down nicely."
+      ]
+    },
+    "security": {
+      "keywords": ["OAuth scopes", "SSO rollout", "pentest findings", "secrets rotation", "dependency scanning", "zero-trust", "phishing simulation", "access review", "incident runbook", "SAML config"],
+      "threads": [
+        "Q3 {kw} report is in. Two highs, both patched. Summary in thread.",
+        "Rolling out {kw} to the remaining teams next week — what to expect below.",
+        "New {kw} policy: what changes for engineers, in plain English.",
+        "Tabletop exercise results — our {kw} held up, mostly. Gaps in thread.",
+        "PSA: we're tightening {kw} on all internal apps. Migration guide below."
+      ],
+      "questions": [
+        "What {kw} do I actually need for a bot that only reads public channels?",
+        "The {kw} is rejecting my login since yesterday — known issue?",
+        "How often does {kw} run, and can I trigger it manually on a PR?",
+        "Who reviews {kw} requests? Mine's been pending three days."
+      ],
+      "answers": [
+        "Least privilege: start with read-only scopes and add on demand. I keep a cheat-sheet for {kw} — sharing.",
+        "Known issue with the IdP cert rotation, fix rolling out this morning. You're not locked out, just cached.",
+        "Nightly, and yes — there's a label you can add to the PR to trigger it.",
+        "That's me. Approved — sorry, the queue notification was going to the wrong channel."
+      ],
+      "chatter": [
+        "This month's {kw} click-rate was our best yet. Nice work everyone.",
+        "CVE feed is noisy today, nothing affects our stack.",
+        "Badge access review happening Friday, expect an email."
+      ]
+    },
+    "marketing-analytics": {
+      "keywords": ["attribution model", "GA4 migration", "campaign dashboard", "conversion tracking", "UTM conventions", "cohort analysis", "funnel drop-off", "LTV model", "consent-mode data", "channel mix"],
+      "threads": [
+        "The new {kw} is live in the dashboard. What changed and why, in thread.",
+        "Q2 {kw} analysis done — surprising result on paid social.",
+        "Proposal: we standardise {kw} across all teams. Current mess documented below.",
+        "Rebuilt the {kw} after the tracking change. Numbers now reconcile.",
+        "Deep dive: the {kw} was overstating mobile by 20%. Here's the fix."
+      ],
+      "questions": [
+        "Why does the {kw} disagree with the finance numbers for March?",
+        "Can someone re-run the {kw} with EU traffic excluded?",
+        "What's our convention for {kw} on partner links?",
+        "Is the {kw} in the dashboard using last-click or data-driven?"
+      ],
+      "answers": [
+        "Timezone mismatch — the {kw} uses UTC, finance uses local. There's a reconciled view, use that one.",
+        "Done, refreshed in the dashboard. EU exclusion is now a saved filter.",
+        "Documented convention: lowercase, hyphens, source first. The linter in the link builder enforces it.",
+        "Data-driven since April. The changelog tab in the dashboard tracks every switch."
+      ],
+      "chatter": [
+        "Monthly {kw} review is booked for Tuesday.",
+        "New benchmark report from the industry group — we're above median on retention.",
+        "Heads up: ad platform API deprecation lands next quarter."
+      ]
+    },
+    "platform-infra": {
+      "keywords": ["Cloud Run scaling", "Terraform modules", "CI pipeline", "artifact registry", "workload identity", "canary deploys", "log-based alerts", "GKE upgrade", "cost dashboards", "service mesh"],
+      "threads": [
+        "The {kw} migration is complete. What changed for deploys, in thread.",
+        "Postmortem: Tuesday's outage traced to {kw}. Full timeline below.",
+        "New {kw} setup — every service gets this for free now.",
+        "RFC: standardising our {kw} across all repos. Comments welcome.",
+        "Benchmarked {kw} configurations so you don't have to. Results in thread."
+      ],
+      "questions": [
+        "How do I get {kw} working for a new service?",
+        "The {kw} is failing on main but passing locally — ideas?",
+        "Who can bump the quota on {kw}? We're hitting limits in staging.",
+        "Is there a template for {kw} or do I copy from another repo?"
+      ],
+      "answers": [
+        "There's a module for it — three lines in your terraform and you're done. Example in the platform repo.",
+        "Cache poisoning, nine times out of ten. Clear the CI cache and re-run; if it persists ping me.",
+        "Raised it. Also set up an alert so we see it before it blocks anyone next time.",
+        "Template exists as of last month — cookiecutter in the platform repo. Copying from other repos is how we got the mess."
+      ],
+      "chatter": [
+        "{kw} costs dropped 15% after the rightsizing pass.",
+        "Upgrading the build runners this weekend, expect a brief queue pause Saturday morning.",
+        "New grafana dashboards are live."
+      ]
+    },
+    "product": {
+      "keywords": ["user research", "roadmap review", "feature flags", "beta cohort", "churn analysis", "pricing experiment", "onboarding flow", "NPS survey", "discovery interviews", "release notes"],
+      "threads": [
+        "Synthesis from last week's {kw} — five themes, strong signal on two.",
+        "Q3 {kw} draft is up. Big bets and what we're NOT doing, in thread.",
+        "Results from the {kw}: clear winner, shipping to 100% next week.",
+        "We're changing how we run {kw} — new process below.",
+        "The {kw} numbers are in and they're better than expected. Breakdown in thread."
+      ],
+      "questions": [
+        "When does the {kw} start? Sales is asking.",
+        "Can we add two customers to the {kw}?",
+        "Where do the {kw} recordings live?",
+        "What's the threshold for graduating a {kw} to GA?"
+      ],
+      "answers": [
+        "Kicks off Monday — brief for sales is already in their channel.",
+        "Yes if they match the cohort criteria. Send me the accounts and I'll check.",
+        "Research drive, folder by quarter. Ask for access if you can't see it.",
+        "Documented in the process doc: stability, adoption, and support-ticket thresholds. Link in channel topic."
+      ],
+      "chatter": [
+        "Reminder: {kw} readout on Thursday, open invite.",
+        "Great customer quote from this morning's call — adding it to the wall.",
+        "Release notes for 4.2 are drafted, review by EOD please."
+      ]
+    },
+    "general": {
+      "keywords": ["all-hands", "office move", "new starter", "quarterly goals", "team offsite", "holiday schedule", "expense policy", "wellness week"],
+      "threads": [
+        "Notes from today's {kw} for anyone who missed it.",
+        "Planning the {kw} — dates and venue options in thread, vote please."
+      ],
+      "questions": [
+        "What's the deadline for {kw} submissions?",
+        "Is the {kw} calendar updated for December?"
+      ],
+      "answers": [
+        "End of Friday. The form is linked in the channel topic.",
+        "Updated this morning — refresh and it should show."
+      ],
+      "chatter": [
+        "Welcome to our {kw} joining the data team today! 🎉",
+        "Coffee machine on 3 is fixed.",
+        "Don't forget: {kw} starts Monday.",
+        "Friday social is at the usual place, 5:30."
+      ]
+    },
+    "help-desk": {
+      "keywords": ["laptop refresh", "VPN access", "password reset", "monitor request", "software licence", "printer setup"],
+      "threads": [],
+      "questions": [
+        "How do I request a {kw}?",
+        "My {kw} isn't working after the update — anyone else?",
+        "Who approves {kw} orders?",
+        "Is there a queue for {kw} tickets or do I just post here?"
+      ],
+      "answers": [
+        "Portal link in the channel topic — takes two minutes.",
+        "Known issue, IT is on it. Workaround: restart twice (really).",
+        "Your manager, then IT fulfils it. Usually 2-3 days.",
+        "Post here with the template and it auto-creates a ticket."
+      ],
+      "chatter": [
+        "IT maintenance window Saturday 6-8am, expect brief outages.",
+        "New starter equipment forms now live in the portal."
+      ]
+    }
+  }
+}

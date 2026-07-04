@@ -1,0 +1,96 @@
+{
+  "personas": [
+    {
+      "handle": "sarah.okafor",
+      "display_name": "Sarah Okafor",
+      "role": "Legal Ops",
+      "icon_emoji": ":woman-office-worker:",
+      "expert_channels": ["legal-compliance"],
+      "active_channels": ["legal-compliance", "product", "general"]
+    },
+    {
+      "handle": "maya.chen",
+      "display_name": "Maya Chen",
+      "role": "Frontend Engineer",
+      "icon_emoji": ":woman-technologist:",
+      "expert_channels": ["frontend"],
+      "active_channels": ["frontend", "product", "general"]
+    },
+    {
+      "handle": "deepak.rao",
+      "display_name": "Deepak Rao",
+      "role": "Data Engineer",
+      "icon_emoji": ":man-technologist:",
+      "expert_channels": ["data-eng"],
+      "active_channels": ["data-eng", "platform-infra", "general"]
+    },
+    {
+      "handle": "tom.hardwick",
+      "display_name": "Tom Hardwick",
+      "role": "Security Engineer",
+      "icon_emoji": ":shield:",
+      "expert_channels": ["security"],
+      "active_channels": ["security", "platform-infra", "legal-compliance", "general"]
+    },
+    {
+      "handle": "lena.fischer",
+      "display_name": "Lena Fischer",
+      "role": "Marketing Analyst",
+      "icon_emoji": ":bar_chart:",
+      "expert_channels": ["marketing-analytics"],
+      "active_channels": ["marketing-analytics", "data-eng", "general"]
+    },
+    {
+      "handle": "omar.haddad",
+      "display_name": "Omar Haddad",
+      "role": "Platform Engineer",
+      "icon_emoji": ":gear:",
+      "expert_channels": ["platform-infra"],
+      "active_channels": ["platform-infra", "data-eng", "security", "general"]
+    },
+    {
+      "handle": "jess.miller",
+      "display_name": "Jess Miller",
+      "role": "Product Manager",
+      "icon_emoji": ":clipboard:",
+      "expert_channels": ["product"],
+      "active_channels": ["product", "frontend", "marketing-analytics", "general"]
+    },
+    {
+      "handle": "nina.kowalski",
+      "display_name": "Nina Kowalski",
+      "role": "Product Designer",
+      "icon_emoji": ":art:",
+      "expert_channels": [],
+      "active_channels": ["frontend", "product", "general"]
+    },
+    {
+      "handle": "andrei.popescu",
+      "display_name": "Andrei Popescu",
+      "role": "Backend Engineer",
+      "icon_emoji": ":wrench:",
+      "expert_channels": [],
+      "active_channels": ["platform-infra", "data-eng", "security", "general"]
+    },
+    {
+      "handle": "chris.taylor",
+      "display_name": "Chris Taylor",
+      "role": "Support Lead",
+      "icon_emoji": ":speech_balloon:",
+      "expert_channels": [],
+      "active_channels": ["general", "frontend", "legal-compliance", "product", "help-desk"],
+      "note": "High-volume question-asker. Exists to prove message volume != expertise."
+    }
+  ],
+  "channels": [
+    "legal-compliance",
+    "frontend",
+    "data-eng",
+    "security",
+    "marketing-analytics",
+    "platform-infra",
+    "product",
+    "general",
+    "help-desk"
+  ]
+}

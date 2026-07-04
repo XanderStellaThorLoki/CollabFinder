@@ -1,0 +1,9 @@
+slack_sdk>=3.27
+slack_bolt>=1.18
+fastapi>=0.110
+uvicorn>=0.29
+google-cloud-firestore>=2.16
+google-cloud-bigquery>=3.20
+anthropic>=0.25
+pyyaml>=6.0
+pytest>=8.0
