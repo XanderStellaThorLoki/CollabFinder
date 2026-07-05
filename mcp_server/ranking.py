@@ -26,17 +26,18 @@ def _match_score(profile: dict, query_terms: list[str]) -> tuple[float, list[str
 
 
 def _evidence_for(profile: dict, matched_topics: list[str]) -> dict:
-    totals = {"thread_parents": 0, "replies_given": 0, "messages": 0,
-              "replies_received": 0, "channels": {}}
-    for t in matched_topics:
-        ev = profile["evidence"].get(t)
-        if not ev:
-            continue
-        for k in ("thread_parents", "replies_given", "messages", "replies_received"):
-            totals[k] += ev[k]
-        for ch, n in ev["channels"].items():
-            totals["channels"][ch] = totals["channels"].get(ch, 0) + n
-    return totals
+    """Evidence from the single strongest matched topic. Matched topics overlap
+    (one message about "gdpr compliance" matches both "gdpr" and "gdpr
+    compliance"), so summing across them double-counts the same messages and
+    produces reasons that overstate reality."""
+    empty = {"thread_parents": 0, "replies_given": 0, "messages": 0,
+             "replies_received": 0, "channels": {}}
+    best = max(
+        (t for t in matched_topics if t in profile["evidence"]),
+        key=lambda t: profile["topics"].get(t, 0.0),
+        default=None,
+    )
+    return profile["evidence"][best] if best else empty
 
 
 def _reason(evidence: dict) -> str:
