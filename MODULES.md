@@ -1,5 +1,10 @@
 # CollabFinder — Module Guide
 
+**Status 2026-07-07:** end-to-end verified live in the sandbox — /collab query,
+honest empty answer, opt-out, privacy summary, pinned banner all working via
+Socket Mode. Remaining: GCP billing link → Cloud Run deploy → Agent Builder
+wiring → demo video → submit (due 2026-07-13 17:00 PT).
+
 Working reference for what each module does, what it depends on, and what "done" means for it.
 Keep this current as the build progresses — it is the map, the code is the territory.
 
