@@ -48,8 +48,8 @@ def _load(name: str) -> dict:
     return json.loads((HERE / name).read_text(encoding="utf-8"))
 
 
-def _fill(template: str, keywords: list[str], rng: random.Random) -> str:
-    return template.replace("{kw}", rng.choice(keywords)) if "{kw}" in template else template
+def _fill(template: str, kw: str) -> str:
+    return template.replace("{kw}", kw)
 
 
 def _cycle_to(items: list, n: int) -> list:
@@ -89,45 +89,58 @@ class CorpusBuilder:
             if not actives:
                 continue
 
-            # Threads: expert-authored parent + replies from others in channel.
+            # Threads: expert-authored parent + replies. Keywords rotate
+            # round-robin so every topic in the pool is covered by the expert.
+            # Replies keep the expertise story coherent: experts reply with
+            # answers, non-experts reply with chatter — never the reverse.
             thread_templates = list(t.get("threads", []))
             self.rng.shuffle(thread_templates)
             thread_templates = _cycle_to(thread_templates, THREADS_PER_CHANNEL)
             for i, parent_tpl in enumerate(thread_templates):
+                kw = kws[i % len(kws)]
                 author = self.rng.choice(experts) if experts else self.rng.choice(actives)
                 key = f"{channel}-thread-{i}"
-                plan.append(PlannedMessage(channel, author, _fill(parent_tpl, kws, self.rng), thread_key=key))
+                plan.append(PlannedMessage(channel, author, _fill(parent_tpl, kw), thread_key=key))
                 repliers = self._actives_in(channel, exclude={author}) or actives
                 for _ in range(self.rng.randint(*REPLIES_PER_THREAD)):
                     replier = self.rng.choice(repliers)
-                    reply_pool = t.get("answers", []) + t.get("chatter", [])
+                    pool = t.get("answers", []) if replier in experts else (
+                        t.get("chatter", []) or t.get("questions", [])
+                    )
+                    if not pool:
+                        continue
                     plan.append(PlannedMessage(
-                        channel, replier, _fill(self.rng.choice(reply_pool), kws, self.rng),
+                        channel, replier, _fill(self.rng.choice(pool), kw),
                         thread_key=key, is_reply=True,
                     ))
 
-            # Q&A: non-expert asks (as a thread parent), expert answers in-thread.
+            # Q&A: non-expert asks, expert answers — about the SAME keyword,
+            # so the answer reinforces the expert's signal for that topic.
             askers = [h for h in actives if h not in experts] or actives
             question_templates = list(t.get("questions", []))
             self.rng.shuffle(question_templates)
             question_templates = _cycle_to(question_templates, QUESTIONS_PER_CHANNEL)
             for i, q_tpl in enumerate(question_templates):
+                kw = kws[(i + THREADS_PER_CHANNEL) % len(kws)]
                 asker = self.rng.choice(askers)
                 key = f"{channel}-q-{i}"
-                plan.append(PlannedMessage(channel, asker, _fill(q_tpl, kws, self.rng), thread_key=key))
+                plan.append(PlannedMessage(channel, asker, _fill(q_tpl, kw), thread_key=key))
                 if experts and t.get("answers"):
                     answerer = self.rng.choice(experts)
                     plan.append(PlannedMessage(
-                        channel, answerer, _fill(self.rng.choice(t["answers"]), kws, self.rng),
+                        channel, answerer, _fill(self.rng.choice(t["answers"]), kw),
                         thread_key=key, is_reply=True,
                     ))
 
-            # Standalone chatter from anyone active.
+            # Standalone chatter from anyone active; keyword can roam here.
             for _ in range(CHATTER_PER_CHANNEL):
                 if not t.get("chatter"):
                     break
                 author = self.rng.choice(actives)
-                plan.append(PlannedMessage(channel, author, _fill(self.rng.choice(t["chatter"]), kws, self.rng)))
+                plan.append(PlannedMessage(
+                    channel, author,
+                    _fill(self.rng.choice(t["chatter"]), self.rng.choice(kws)),
+                ))
 
         return plan
 

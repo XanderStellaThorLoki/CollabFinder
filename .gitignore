@@ -21,3 +21,9 @@ Thumbs.db
 .pytest_cache/
 dist/
 build/
+
+# Generated data (local backends)
+profiles.json
+optouts.json
+audit_log.jsonl
+signals.json

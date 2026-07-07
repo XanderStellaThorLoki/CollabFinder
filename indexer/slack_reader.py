@@ -37,10 +37,12 @@ class MessageRecord:
 class SlackReader:
     def __init__(self, token: str | None = None, audit: AuditLog | None = None):
         from slack_sdk import WebClient
+        from slack_sdk.http_retry.builtin_handlers import RateLimitErrorRetryHandler
         token = token or os.environ.get("SLACK_BOT_TOKEN")
         if not token:
             sys.exit("SLACK_BOT_TOKEN is not set.")
         self.client = WebClient(token=token)
+        self.client.retry_handlers.append(RateLimitErrorRetryHandler(max_retry_count=10))
         self.audit = audit or AuditLog()
         self._user_names: dict[str, str] = {}
 
@@ -134,6 +136,13 @@ class SlackReader:
     def read_all(self) -> list[MessageRecord]:
         records: list[MessageRecord] = []
         for ch in self.list_public_channels():
+            # history requires membership; join is idempotent and public-only.
+            try:
+                self.client.conversations_join(channel=ch["id"])
+            except Exception:
+                self.audit.record("conversations.join", scope=f"#{ch['name']}",
+                                  detail="join failed - channel skipped")
+                continue
             records.extend(self.read_channel(ch["id"], ch["name"]))
         return records
 
