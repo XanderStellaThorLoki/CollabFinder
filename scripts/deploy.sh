@@ -3,7 +3,7 @@
 # Usage: ./scripts/deploy.sh [project-id] [region]
 set -euo pipefail
 
-PROJECT="${1:-${GCP_PROJECT:-supple-league-487503-p8}}"
+PROJECT="${1:-${GCP_PROJECT:-collabfinder-hack-2026}}"
 REGION="${2:-us-central1}"
 SERVICE="collabfinder-mcp"
 
