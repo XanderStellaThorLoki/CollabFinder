@@ -59,7 +59,16 @@ def _reason(evidence: dict) -> str:
 def _confidence(scores: list[float], evidence: dict) -> str:
     if not scores or scores[0] <= 0:
         return "none"
-    strong_evidence = evidence["thread_parents"] >= 2 or evidence["replies_given"] >= 3
+    # Asker-only evidence is interest, never authority.
+    if not (evidence["thread_parents"] or evidence["replies_given"]):
+        return "low"
+    strong_evidence = (
+        evidence["thread_parents"] >= 2
+        or evidence["replies_given"] >= 3
+        # One authored thread that the community engaged with is corroborated
+        # authority, not a lone data point.
+        or (evidence["thread_parents"] >= 1 and evidence["replies_received"] >= 3)
+    )
     clear_lead = len(scores) == 1 or scores[0] >= 1.5 * scores[1]
     if strong_evidence and clear_lead:
         return "high"
