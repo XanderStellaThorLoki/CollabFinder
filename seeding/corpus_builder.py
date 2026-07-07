@@ -23,6 +23,17 @@ from pathlib import Path
 HERE = Path(__file__).parent
 DEFAULT_SEED = 42
 
+# What non-experts say in threads. Deliberately keyword-free: bystander
+# chatter must not accrue topical expertise signal for the repliers.
+NEUTRAL_REPLIES = [
+    "Good to know — thanks for the update.",
+    "Nice, following this thread.",
+    "Thanks for flagging this.",
+    "Makes sense to me.",
+    "Appreciate the writeup!",
+    "Bookmarking this one.",
+]
+
 # Per-channel volume knobs. Totals land ~520 messages across 9 channels.
 # Template pools are smaller than these counts; templates repeat with different
 # {kw} fills, which reads naturally (same person, same beat, different topic).
@@ -102,15 +113,17 @@ class CorpusBuilder:
                 key = f"{channel}-thread-{i}"
                 plan.append(PlannedMessage(channel, author, _fill(parent_tpl, kw), thread_key=key))
                 repliers = self._actives_in(channel, exclude={author}) or actives
+                kw_free_chatter = [c for c in t.get("chatter", []) if "{kw}" not in c]
                 for _ in range(self.rng.randint(*REPLIES_PER_THREAD)):
                     replier = self.rng.choice(repliers)
-                    pool = t.get("answers", []) if replier in experts else (
-                        t.get("chatter", []) or t.get("questions", [])
-                    )
+                    if replier in experts:
+                        pool, reply_kw = t.get("answers", []), kw
+                    else:
+                        pool, reply_kw = (kw_free_chatter or NEUTRAL_REPLIES), ""
                     if not pool:
                         continue
                     plan.append(PlannedMessage(
-                        channel, replier, _fill(self.rng.choice(pool), kw),
+                        channel, replier, _fill(self.rng.choice(pool), reply_kw),
                         thread_key=key, is_reply=True,
                     ))
 

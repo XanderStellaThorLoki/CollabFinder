@@ -12,16 +12,16 @@ from profiles.store import ProfileStore
 
 
 def _match_score(profile: dict, query_terms: list[str]) -> tuple[float, list[str]]:
-    """Sum scores of profile topics that match any query term (substring match
-    both directions, so 'gdpr' hits 'gdpr compliance' and vice versa)."""
+    """Sum scores of profile topics sharing a whole word with the query, so
+    'gdpr' matches 'gdpr compliance' but 'access' does NOT match
+    'accessibility' (substring matching proved too loose in practice)."""
+    terms = set(query_terms)
     score = 0.0
     matched: list[str] = []
     for topic, s in profile["topics"].items():
-        for term in query_terms:
-            if term in topic or topic in term:
-                score += s
-                matched.append(topic)
-                break
+        if terms & set(topic.split()):
+            score += s
+            matched.append(topic)
     return score, matched
 
 
@@ -30,8 +30,8 @@ def _evidence_for(profile: dict, matched_topics: list[str]) -> dict:
     (one message about "gdpr compliance" matches both "gdpr" and "gdpr
     compliance"), so summing across them double-counts the same messages and
     produces reasons that overstate reality."""
-    empty = {"thread_parents": 0, "replies_given": 0, "messages": 0,
-             "replies_received": 0, "channels": {}}
+    empty = {"thread_parents": 0, "questions_asked": 0, "replies_given": 0,
+             "messages": 0, "replies_received": 0, "channels": {}}
     best = max(
         (t for t in matched_topics if t in profile["evidence"]),
         key=lambda t: profile["topics"].get(t, 0.0),
@@ -48,6 +48,9 @@ def _reason(evidence: dict) -> str:
         parts.append(f"answered {evidence['replies_given']} question(s)")
     if evidence["replies_received"]:
         parts.append(f"drew {evidence['replies_received']} replies")
+    if not parts and evidence.get("questions_asked"):
+        # Interest, not expertise — say exactly that.
+        parts.append(f"asked about this {evidence['questions_asked']} time(s)")
     top_channels = sorted(evidence["channels"], key=evidence["channels"].get, reverse=True)[:2]
     where = " in " + ", ".join(f"#{c}" for c in top_channels) if top_channels else ""
     return (", ".join(parts) or f"{evidence['messages']} relevant message(s)") + where

@@ -6,6 +6,8 @@ Weighting model (the part the README formula describes):
 
 base_weight encodes that contribution depth beats volume:
     thread parent authored:   3.0  (+0.5 per reply received, capped at +2.5)
+    question asked:           0.5  (a thread parent ending in "?" — asking
+                                    about a topic is interest, not expertise)
     reply given in a thread:  2.0  (answering is expertise signal)
     standalone message:       1.0
 Being mentioned in a message about a topic credits the mentioned user 1.0 —
@@ -25,11 +27,16 @@ from collections import defaultdict
 DEFAULT_HALF_LIFE_DAYS = 90.0
 
 W_THREAD_PARENT = 3.0
+W_QUESTION = 0.5            # thread parent that is a question
 W_REPLY_RECEIVED = 0.5      # per reply to your thread
 W_REPLY_RECEIVED_CAP = 2.5
 W_REPLY_GIVEN = 2.0
 W_STANDALONE = 1.0
 W_MENTIONED = 1.0
+
+
+def _is_question(text: str) -> bool:
+    return text.rstrip().endswith("?")
 
 
 def _decay(age_days: float, half_life_days: float) -> float:
@@ -52,8 +59,8 @@ def build_profiles(
     now = now or time.time()
     profiles: dict[str, dict] = defaultdict(
         lambda: {"topics": defaultdict(float), "evidence": defaultdict(
-            lambda: {"thread_parents": 0, "replies_given": 0, "messages": 0,
-                     "replies_received": 0, "channels": defaultdict(int)}
+            lambda: {"thread_parents": 0, "questions_asked": 0, "replies_given": 0,
+                     "messages": 0, "replies_received": 0, "channels": defaultdict(int)}
         )}
     )
 
@@ -62,7 +69,10 @@ def build_profiles(
         age_days = (now - float(sig["ts"])) / 86400.0
         decay = _decay(age_days, half_life_days)
 
-        if sig.get("is_thread_parent"):
+        is_question = sig.get("is_thread_parent") and _is_question(sig.get("text", ""))
+        if is_question:
+            base = W_QUESTION
+        elif sig.get("is_thread_parent"):
             base = W_THREAD_PARENT + min(
                 sig.get("reply_count", 0) * W_REPLY_RECEIVED, W_REPLY_RECEIVED_CAP
             )
@@ -77,7 +87,9 @@ def build_profiles(
             ev = prof["evidence"][topic]
             ev["messages"] += 1
             ev["channels"][sig["channel"]] += 1
-            if sig.get("is_thread_parent"):
+            if is_question:
+                ev["questions_asked"] += 1
+            elif sig.get("is_thread_parent"):
                 ev["thread_parents"] += 1
                 ev["replies_received"] += sig.get("reply_count", 0)
             elif sig.get("is_reply"):

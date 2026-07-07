@@ -51,6 +51,20 @@ class TestWeighting:
         assert p["sarah"]["topics"]["gdpr"] > p["chris"]["topics"]["gdpr"]
 
 
+class TestQuestionHeuristic:
+    def test_asking_is_not_expertise(self):
+        p = build_profiles([
+            _sig("asker", ["gdpr"], is_thread_parent=True, reply_count=2,
+                 text="Does GDPR apply here?"),
+            _sig("author", ["gdpr"], is_thread_parent=True, reply_count=2,
+                 text="New GDPR guidance landed."),
+        ], now=NOW)
+        assert p["asker"]["topics"]["gdpr"] == 0.5
+        assert p["author"]["topics"]["gdpr"] == W_THREAD_PARENT + 1.0
+        assert p["asker"]["evidence"]["gdpr"]["questions_asked"] == 1
+        assert p["asker"]["evidence"]["gdpr"]["thread_parents"] == 0
+
+
 class TestOptOut:
     def test_opted_out_user_never_stored_or_returned(self, tmp_path):
         registry = OptOutRegistry(path=tmp_path / "optouts.json")
