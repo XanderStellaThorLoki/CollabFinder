@@ -14,6 +14,7 @@ gcloud run deploy "${SERVICE}" \
   --region="${REGION}" \
   --allow-unauthenticated \
   --memory=512Mi \
+  --quiet \
   --set-env-vars="SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN:?export SLACK_BOT_TOKEN first}"
 
 echo
