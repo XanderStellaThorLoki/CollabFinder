@@ -35,36 +35,49 @@ prompt for the agent:
 > including its confidence level. Never invent expertise it didn't report.
 > If confidence is low or results are empty, say so plainly.
 
-## Video script (target 2:30, hard cap 3:00)
+## Video script (target 2:50, hard cap 3:00)
 
-**Beat 1 — the problem (0:00–0:20).** Screen: the seeded workspace, busy
+**Beat 1 — the problem (0:00–0:15).** Screen: the seeded workspace, busy
 channels. VO: "This is a company. Nine channels, ten people, months of
 conversation. Somewhere in here is the answer to the most common unanswered
 question at work: who should I talk to about this?"
 
-**Beat 2 — the answer (0:20–1:00).** Screen: type `/collab who knows about
-GDPR compliance?` in #general. Response card appears. VO: "CollabFinder
-answers it in one message. Not just a name — the reason. Sarah authored the
-GDPR threads other people reply to. That's expertise you can act on." Click
-**Draft intro** → show the drafted DM.
+**Beat 2 — the agent (0:15–0:55).** Screen: open the CollabFinder agent
+pane from the top bar; the greeting and suggested prompts appear. Click
+*"Who knows about GDPR compliance?"* Card appears. VO: "CollabFinder is a
+Slack agent. Ask it in plain language and you get a person, not a list —
+with the reason: Sarah authored the GDPR threads other people reply to,
+high confidence. And the person who merely *asked* about GDPR? Ranked low,
+labeled honestly — asking is interest, not expertise." Click **Draft
+intro** → show the draft.
 
-**Beat 3 — volume ≠ expertise (1:00–1:30).** Screen: scroll #general
-showing Chris Taylor posting constantly, then `/collab` result where the
-quieter expert outranks him. VO: "The loudest person isn't ranked first.
-CollabFinder weighs threads people start and questions they answer, not raw
-message count."
+**Beat 3 — volume ≠ expertise (0:55–1:20).** Screen: scroll a channel
+showing Chris Taylor posting constantly, then a query where the quieter
+expert outranks him. VO: "The loudest voice isn't ranked first.
+CollabFinder weighs threads people author and questions they answer — not
+message count. Talking a lot doesn't make you an expert here."
 
-**Beat 4 — the privacy spine (1:30–2:15).** Screen: `/collab privacy`
-response, then the pinned banner in a channel, then `/collab opt-out`
-followed by the same query with that person absent. VO: "Public channels
-only — the bot's own Slack permissions make private content unreadable.
-Org-level monitoring means a pinned banner, always. Like a webcam light: no
-light, no camera. And anyone can opt out — effective immediately."
+**Beat 4 — no expert? Outside Experts (1:20–1:40).** Screen: `/collab
+patent law` → honest empty + Rachel Goldman card with rate and Book
+consult button. VO: "And when nobody in the org has the answer, it says so
+honestly — then offers a vetted outside consultant from the company's own
+directory. Booked directly with them; payment never touches CollabFinder."
 
-**Beat 5 — close (2:15–2:40).** Screen: architecture diagram. VO: "Slack
-Real-Time Search feeds an expertise index; an Agent Builder agent queries
-it over MCP. Built for the Slack Agent Builder Challenge — CollabFinder,
-because ambition without guidance is a path to career stagnation."
+**Beat 5 — the privacy spine (1:40–2:25).** Screen: the pinned banner in
+#legal-compliance → the Home tab: "What CollabFinder knows about you," the
+opt-out button clicked live, panel flips to opted-out → `/collab privacy`.
+VO: "Public channels only — the bot's own Slack permissions make private
+content unreadable. Monitored channels carry a pinned banner, always: no
+banner, no monitoring, like the light on a webcam. Every person sees
+exactly what it knows about them, and opting out is one click, effective
+immediately."
+
+**Beat 6 — close (2:25–2:50).** Screen: architecture diagram. VO: "Under
+the hood: Slack's Real-Time Search feeds an expertise index; the agent
+queries it through an MCP server on Cloud Run — the same endpoint any
+agent can use, registered with Slack's MCP integration. Built for the
+Slack Agent Builder Challenge. CollabFinder — because ambition without
+guidance is a path to career stagnation."
 
 ## Demo-day checklist
 

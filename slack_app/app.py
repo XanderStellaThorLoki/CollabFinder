@@ -42,10 +42,22 @@ def greet(say, set_suggested_prompts):
 @assistant.user_message
 def answer(say, payload):
     text = (payload.get("text") or "").strip()
+    lowered = text.lower()
     if not text:
         say("Give me a topic and I'll find your colleague.")
         return
-    if "know about me" in text.lower() or "privacy" in text.lower():
+    if re.search(r"\b(help|how do(es)? (you|this|collabfinder) work|what can you do|hi|hello|hey)\b", lowered):
+        say(
+            "I find the right colleague for any topic by reading *public* "
+            "channel activity — who authors threads, who answers questions, "
+            "who gets replies. Ask me things like *who knows about GDPR "
+            "compliance?* or just name a topic, e.g. *bigquery*. I'll show "
+            "who to talk to and why. Curious what I know about you? Ask "
+            "exactly that — or check my Home tab for your own profile and a "
+            "one-click opt-out."
+        )
+        return
+    if "know about me" in lowered or "privacy" in lowered:
         say(blocks=blocks.privacy_summary(os.environ.get("COLLABFINDER_CANVAS_URL")),
             text="CollabFinder privacy summary")
         return
