@@ -1,0 +1,47 @@
+{
+  "_comment": "Curated Outside Expert directory — org-controlled, vetted entries only. Real deployments replace this sample with their procurement-approved consultant list. CollabFinder links to the expert's own booking page; payment never flows through CollabFinder. Entries here are fictional samples for the demo.",
+  "experts": [
+    {
+      "name": "Dr. Ingrid Vasquez",
+      "field": "GDPR, data protection law, privacy impact assessment",
+      "credentials": "CIPP/E, former EU DPA advisor, 15 years in data protection",
+      "rate": "$400/hr",
+      "booking_url": "https://example.com/book/ingrid-vasquez"
+    },
+    {
+      "name": "Marcus Chen",
+      "field": "BigQuery, data warehouse architecture, pipeline cost optimisation",
+      "credentials": "Google Cloud Certified Fellow, ex-Spotify data platform lead",
+      "rate": "$350/hr",
+      "booking_url": "https://example.com/book/marcus-chen"
+    },
+    {
+      "name": "Amara Osei",
+      "field": "accessibility, WCAG audits, inclusive design",
+      "credentials": "IAAP CPWA, led accessibility at two FTSE-100 retailers",
+      "rate": "$300/hr",
+      "booking_url": "https://example.com/book/amara-osei"
+    },
+    {
+      "name": "Viktor Lindqvist",
+      "field": "penetration testing, zero-trust architecture, SSO, SAML",
+      "credentials": "OSCP, CISSP, 200+ enterprise security assessments",
+      "rate": "$450/hr",
+      "booking_url": "https://example.com/book/viktor-lindqvist"
+    },
+    {
+      "name": "Rachel Goldman",
+      "field": "patent law, intellectual property, trademark strategy",
+      "credentials": "Registered patent attorney, USPTO bar, biotech + software practice",
+      "rate": "$500/hr",
+      "booking_url": "https://example.com/book/rachel-goldman"
+    },
+    {
+      "name": "Tomás Herrera",
+      "field": "attribution modelling, marketing mix modelling, GA4 migration",
+      "credentials": "Ex-Google Analytics product team, published MMM practitioner",
+      "rate": "$325/hr",
+      "booking_url": "https://example.com/book/tomas-herrera"
+    }
+  ]
+}

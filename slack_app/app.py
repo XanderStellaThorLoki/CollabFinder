@@ -66,6 +66,12 @@ def handle_collab(ack, respond, command, client):
     respond(blocks=blocks.expert_results(result), response_type="ephemeral")
 
 
+@app.action(re.compile(r"book_external_.*"))
+def ack_book_external(ack):
+    # URL buttons open the link client-side; Slack still expects an ack.
+    ack()
+
+
 @app.action("draft_intro")
 def handle_draft_intro(ack, body, respond):
     ack()

@@ -20,14 +20,16 @@ def expert_results(payload: dict) -> list[dict]:
     results = payload["results"]
 
     if not results:
-        return [
+        blocks = [
             _section(f"No clear expert signal for *{topic}* in public channels."),
             _context(
                 "That's an honest answer, not a failure — nobody has discussed this "
                 "publicly enough to rank. Try broader terms, or ask in #general."
             ),
-            _context(PRIVACY_FOOTER),
         ]
+        blocks.extend(_external_section(payload.get("external", [])))
+        blocks.append(_context(PRIVACY_FOOTER))
+        return blocks
 
     blocks = [_section(f"Best matches for *{topic}*:")]
     for i, r in enumerate(results, 1):
@@ -37,6 +39,7 @@ def expert_results(payload: dict) -> list[dict]:
         blocks.append(_context(
             "Signal is thin — treat these as leads, not answers."
         ))
+    blocks.extend(_external_section(payload.get("external", [])))
     blocks.append({
         "type": "actions",
         "elements": [
@@ -102,6 +105,38 @@ def transparency_banner() -> list[dict]:
             "opt out. If this banner isn't pinned, this channel isn't monitored."
         ),
     ]
+
+
+def _external_section(external: list[dict]) -> list[dict]:
+    """Outside Expert cards — paid consultation fallback when internal
+    signal is weak. Booking happens on the expert's own page; CollabFinder
+    never handles payment."""
+    if not external:
+        return []
+    blocks = [
+        {"type": "divider"},
+        _section(":telescope: *Outside Experts* — no strong internal match, "
+                 "but your org's vetted consultant directory has:"),
+    ]
+    for e in external:
+        blocks.append({
+            "type": "section",
+            "text": {"type": "mrkdwn", "text": (
+                f"*{e['name']}* · {e['rate']}\n"
+                f"_{e['field']}_\n{e['credentials']}"
+            )},
+            "accessory": {
+                "type": "button",
+                "text": {"type": "plain_text", "text": "Book consult ↗"},
+                "url": e["booking_url"],
+                "action_id": f"book_external_{e['name'].lower().replace(' ', '_').replace('.', '')}",
+            },
+        })
+    blocks.append(_context(
+        "Paid consultation, booked directly with the expert — payment never "
+        "goes through CollabFinder. Directory is curated by your org."
+    ))
+    return blocks
 
 
 def _section(text: str) -> dict:

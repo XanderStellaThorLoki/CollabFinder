@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from profiles.store import ProfileStore
 
+from .external import match_external
+
 
 def _match_score(profile: dict, query_terms: list[str]) -> tuple[float, list[str]]:
     """Sum scores of profile topics sharing a whole word with the query, so
@@ -101,4 +103,11 @@ def query_experts(topic: str, limit: int = 3, store: ProfileStore | None = None)
         })
 
     overall = results[0]["confidence"] if results else "none"
-    return {"query": topic, "confidence": overall, "results": results}
+    payload = {"query": topic, "confidence": overall, "results": results}
+
+    # Outside Experts: only when internal signal is weak. The tool's first
+    # job is connecting colleagues; paid consults are the fallback, not the
+    # product.
+    if overall in ("none", "low"):
+        payload["external"] = match_external(topic)
+    return payload
