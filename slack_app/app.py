@@ -122,6 +122,43 @@ def handle_draft_intro(ack, body, respond):
     )
 
 
+# --- App Home tab ------------------------------------------------------------
+from .home import build_home_view  # noqa: E402
+
+
+def _publish_home(client, user_id: str, search_topic: str | None = None):
+    name = _display_name(client, user_id)
+    client.views_publish(user_id=user_id,
+                         view=build_home_view(name, search_topic, optout))
+
+
+@app.event("app_home_opened")
+def handle_home_opened(client, event):
+    if event.get("tab") == "home":
+        _publish_home(client, event["user"])
+
+
+@app.action("home_search")
+def handle_home_search(ack, client, body):
+    ack()
+    topic = body["actions"][0]["value"] or ""
+    _publish_home(client, body["user"]["id"], topic.strip() or None)
+
+
+@app.action("home_opt_out")
+def handle_home_opt_out(ack, client, body):
+    ack()
+    optout.opt_out(_display_name(client, body["user"]["id"]))
+    _publish_home(client, body["user"]["id"])
+
+
+@app.action("home_opt_in")
+def handle_home_opt_in(ack, client, body):
+    ack()
+    optout.opt_in(_display_name(client, body["user"]["id"]))
+    _publish_home(client, body["user"]["id"])
+
+
 def main() -> None:
     if os.environ.get("SLACK_APP_TOKEN"):
         from slack_bolt.adapter.socket_mode import SocketModeHandler
