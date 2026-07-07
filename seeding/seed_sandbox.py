@@ -19,8 +19,9 @@ bot-authored messages. (Slack does not allow backdating, so all seeded messages
 share ~one timestamp; recency-decay behaviour is covered by unit tests instead
 of demo data.)
 
-Re-running --execute appends duplicate messages. For a clean slate, use a fresh
-sandbox or delete/archive the channels first.
+Re-running --execute is safe: existing messages are read back first and
+already-posted plan entries are skipped, so an interrupted run resumes where
+it stopped instead of duplicating.
 """
 
 from __future__ import annotations
@@ -37,10 +38,13 @@ POST_INTERVAL_SECONDS = 1.1  # stay under chat.postMessage rate limits
 
 def get_client():
     from slack_sdk import WebClient  # imported here so dry runs don't need slack_sdk
+    from slack_sdk.http_retry.builtin_handlers import RateLimitErrorRetryHandler
     token = os.environ.get("SLACK_BOT_TOKEN")
     if not token:
         sys.exit("SLACK_BOT_TOKEN is not set. Export the sandbox bot token first.")
-    return WebClient(token=token)
+    client = WebClient(token=token)
+    client.retry_handlers.append(RateLimitErrorRetryHandler(max_retry_count=10))
+    return client
 
 
 def ensure_channels(client, names: list[str]) -> dict[str, str]:
@@ -73,12 +77,64 @@ def ensure_channels(client, names: list[str]) -> dict[str, str]:
     return ids
 
 
-def post_plan(client: WebClient, plan: list[PlannedMessage], channel_ids: dict[str, str],
+def _fetch_existing(client, channel_id: str):
+    """Read back what's already in a channel so re-runs post only the missing.
+
+    Returns (top_level, replies):
+        top_level: {text: deque of ts, oldest first} for non-reply messages
+        replies:   {parent_ts: {text: count}} for thread replies
+    """
+    from collections import defaultdict, deque
+
+    history = []
+    cursor = None
+    while True:
+        resp = client.conversations_history(channel=channel_id, limit=200, cursor=cursor)
+        history.extend(resp["messages"])
+        cursor = resp.get("response_metadata", {}).get("next_cursor") or None
+        if not cursor:
+            break
+    top_level = defaultdict(deque)
+    replies = defaultdict(lambda: defaultdict(int))
+    for msg in reversed(history):  # oldest first, matching plan order
+        if msg.get("subtype") not in (None, "bot_message"):
+            continue
+        top_level[msg.get("text", "")].append(msg["ts"])
+        if msg.get("reply_count"):
+            resp = client.conversations_replies(channel=channel_id, ts=msg["ts"], limit=200)
+            for reply in resp["messages"]:
+                if reply["ts"] == msg["ts"] or reply.get("subtype") not in (None, "bot_message"):
+                    continue
+                replies[msg["ts"]][reply.get("text", "")] += 1
+    return top_level, replies
+
+
+def post_plan(client, plan: list[PlannedMessage], channel_ids: dict[str, str],
               personas: dict[str, dict]) -> None:
-    thread_ts: dict[str, str] = {}  # thread_key -> parent message ts
+    thread_ts: dict[str, str] = {}   # thread_key -> parent message ts
+    existing: dict[str, tuple] = {}  # channel -> (top_level, replies), fetched lazily
+    total, posted, skipped = len(plan), 0, 0
+
     # Parents must post before their replies; the plan is already ordered that way.
-    total = len(plan)
     for i, msg in enumerate(plan, 1):
+        if msg.channel not in existing:
+            existing[msg.channel] = _fetch_existing(client, channel_ids[msg.channel])
+        top_level, replies = existing[msg.channel]
+
+        if not msg.is_reply:
+            if top_level.get(msg.text):
+                ts = top_level[msg.text].popleft()  # already posted — reuse its ts
+                if msg.thread_key:
+                    thread_ts[msg.thread_key] = ts
+                skipped += 1
+                continue
+        else:
+            parent = thread_ts.get(msg.thread_key or "")
+            if parent and replies.get(parent, {}).get(msg.text, 0) > 0:
+                replies[parent][msg.text] -= 1
+                skipped += 1
+                continue
+
         persona = personas[msg.author]
         kwargs = dict(
             channel=channel_ids[msg.channel],
@@ -86,16 +142,16 @@ def post_plan(client: WebClient, plan: list[PlannedMessage], channel_ids: dict[s
             username=persona["display_name"],
             icon_emoji=persona.get("icon_emoji", ":bust_in_silhouette:"),
         )
-        if msg.is_reply and msg.thread_key:
-            parent = thread_ts.get(msg.thread_key)
-            if parent:
-                kwargs["thread_ts"] = parent
+        if msg.is_reply and msg.thread_key and thread_ts.get(msg.thread_key):
+            kwargs["thread_ts"] = thread_ts[msg.thread_key]
         resp = client.chat_postMessage(**kwargs)
+        posted += 1
         if msg.thread_key and not msg.is_reply:
             thread_ts[msg.thread_key] = resp["ts"]
         if i % 25 == 0 or i == total:
-            print(f"posted {i}/{total}")
+            print(f"progress {i}/{total} (posted {posted}, skipped {skipped})", flush=True)
         time.sleep(POST_INTERVAL_SECONDS)
+    print(f"done: posted {posted}, skipped {skipped} already-present", flush=True)
 
 
 def main() -> None:

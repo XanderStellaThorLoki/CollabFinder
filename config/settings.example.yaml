@@ -1,0 +1,27 @@
+# CollabFinder org-level settings.
+# Copy to settings.yaml (gitignored) and adjust. This file is the org opt-in
+# mechanism: expanded monitoring is a company decision made here, in one
+# reviewable place — never a per-user toggle buried in a UI.
+
+scope:
+  # Default posture. Public channels + @mentions only.
+  # The bot token's scopes enforce this at the API level; this flag exists so
+  # the code refuses wider reads even if someone grants the app wider scopes.
+  expanded_monitoring: false
+
+  # If expanded_monitoring is ever enabled, every channel listed here MUST
+  # carry the pinned transparency banner (slack_app/banner.py). The indexer
+  # refuses to read a listed channel if the banner is missing.
+  monitored_channels: []
+
+profile:
+  recency_half_life_days: 90   # lambda = ln(2)/half_life
+  min_confidence_to_answer: low  # low | medium | high — below this, say "no clear signal"
+
+storage:
+  # Local files by default. Set these to use GCP backends.
+  # firestore_collection: collabfinder-profiles
+  # bigquery_audit_table: project.dataset.collabfinder_audit
+  profiles_path: profiles.json
+  optout_path: optouts.json
+  audit_path: audit_log.jsonl
