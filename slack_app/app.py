@@ -39,9 +39,9 @@ def greet(say, set_suggested_prompts):
     ])
 
 
-@assistant.user_message
-def answer(say, payload):
-    text = (payload.get("text") or "").strip()
+def respond_to_text(text: str, say) -> None:
+    """One responder for every conversational surface (agent thread + DM)."""
+    text = (text or "").strip()
     lowered = text.lower()
     if not text:
         say("Give me a topic and I'll find your colleague.")
@@ -66,7 +66,24 @@ def answer(say, payload):
     say(blocks=blocks.expert_results(result), text=f"Best matches for {topic}")
 
 
+@assistant.user_message
+def answer(say, payload):
+    respond_to_text(payload.get("text"), say)
+
+
 app.use(assistant)
+
+
+@app.event("message")
+def handle_dm(event, say):
+    """Plain DMs to the bot (Messages tab) get the same brain as the agent
+    pane. Assistant-thread messages are consumed by the middleware above and
+    never reach this listener."""
+    if event.get("channel_type") != "im":
+        return
+    if event.get("bot_id") or event.get("subtype"):
+        return
+    respond_to_text(event.get("text"), say)
 
 
 def _display_name(client, user_id: str) -> str:
