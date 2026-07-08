@@ -29,14 +29,31 @@ def _load_directory(path: Path | str | None = None) -> list[dict]:
     return json.loads(p.read_text(encoding="utf-8")).get("experts", [])
 
 
+def _referral_url(expert: dict, topic: str) -> str:
+    """Booking link tagged for referral attribution — the click log plus this
+    tag are the billing evidence behind the platform's commission on
+    referred business. No personal data in the params: topic only."""
+    from urllib.parse import quote_plus
+    sep = "&" if "?" in expert["booking_url"] else "?"
+    return (f"{expert['booking_url']}{sep}ref=collabfinder"
+            f"&q={quote_plus(topic.lower()[:80])}")
+
+
 def match_external(topic: str, limit: int = 2, path: Path | str | None = None) -> list[dict]:
-    """Whole-word match of query terms against each expert's field tags."""
+    """Whole-word match of query terms against each expert's field tags.
+    Only credentialed entries (status == verified) are ever offered."""
     terms = {t for t in topic.lower().replace(",", " ").split() if len(t) > 1}
     results = []
     for expert in _load_directory(path):
+        if expert.get("status") != "verified":
+            continue
         field_words = set(expert["field"].lower().replace(",", " ").split())
         overlap = terms & field_words
         if overlap:
-            results.append({**expert, "matched_on": sorted(overlap)})
+            results.append({
+                **expert,
+                "matched_on": sorted(overlap),
+                "booking_url": _referral_url(expert, topic),
+            })
     results.sort(key=lambda e: len(e["matched_on"]), reverse=True)
     return results[:limit]

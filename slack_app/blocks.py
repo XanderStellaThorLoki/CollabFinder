@@ -117,16 +117,18 @@ def _external_section(external: list[dict]) -> list[dict]:
                  "your org's directory:"),
     ]
     for e in external:
+        verified = f" · :white_check_mark: verified {e['verified_on']}" if e.get("status") == "verified" else ""
         blocks.append({
             "type": "section",
             "text": {"type": "mrkdwn", "text": (
-                f"*{e['name']}* · {e['rate']}\n"
+                f"*{e['name']}* · {e['rate']}{verified}\n"
                 f"_{e['field']}_\n{e['credentials']}"
             )},
             "accessory": {
                 "type": "button",
                 "text": {"type": "plain_text", "text": "Book consult ↗"},
                 "url": e["booking_url"],
+                "value": e["name"],
                 "action_id": f"book_external_{e['name'].lower().replace(' ', '_').replace('.', '')}",
             },
         })

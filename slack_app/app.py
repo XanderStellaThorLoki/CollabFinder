@@ -129,9 +129,16 @@ def handle_collab(ack, respond, command, client):
 
 
 @app.action(re.compile(r"book_external_.*"))
-def ack_book_external(ack):
+def ack_book_external(ack, body):
     # URL buttons open the link client-side; Slack still expects an ack.
+    # The click record is the billing evidence for the referral commission.
     ack()
+    from indexer.audit_log import AuditLog
+    AuditLog().record(
+        "referral.click",
+        scope=body["actions"][0].get("value", "unknown"),
+        detail=f"clicked_by={body['user']['id']}",
+    )
 
 
 @app.action(re.compile(r"draft_intro(_\d+)?"))
