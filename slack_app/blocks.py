@@ -117,7 +117,11 @@ def _external_section(external: list[dict]) -> list[dict]:
                  "your org's directory:"),
     ]
     for e in external:
-        verified = f" · :white_check_mark: verified {e['verified_on']}" if e.get("status") == "verified" else ""
+        # :baoigheallain-crest: is a custom workspace emoji (the shield +
+        # phoenix crest, source: collabfinder-media/crest.svg). Workspaces
+        # without it will show the shortcode as text — upload the emoji on
+        # install.
+        verified = f" · :baoigheallain-crest: verified {e['verified_on']}" if e.get("status") == "verified" else ""
         blocks.append({
             "type": "section",
             "text": {"type": "mrkdwn", "text": (
