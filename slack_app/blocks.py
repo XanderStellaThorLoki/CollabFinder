@@ -34,24 +34,22 @@ def expert_results(payload: dict) -> list[dict]:
     blocks = [_section(f"Best matches for *{topic}*:")]
     for i, r in enumerate(results, 1):
         badge = CONFIDENCE_LABEL.get(r["confidence"], r["confidence"])
-        blocks.append(_section(f"*{i}. {r['name']}*  ·  {badge}\n_{r['reason']}_"))
+        blocks.append({
+            "type": "section",
+            "text": {"type": "mrkdwn",
+                     "text": f"*{i}. {r['name']}*  ·  {badge}\n_{r['reason']}_"},
+            "accessory": {
+                "type": "button",
+                "text": {"type": "plain_text", "text": "Draft intro ✍️"},
+                "action_id": f"draft_intro_{i}",
+                "value": r["name"],
+            },
+        })
     if payload["confidence"] == "low":
         blocks.append(_context(
             "Signal is thin — treat these as leads, not answers."
         ))
     blocks.extend(_external_section(payload.get("external", [])))
-    blocks.append({
-        "type": "actions",
-        "elements": [
-            {
-                "type": "button",
-                "text": {"type": "plain_text", "text": "Draft intro ✍️"},
-                "action_id": "draft_intro",
-                "value": results[0]["name"],
-                "style": "primary",
-            },
-        ],
-    })
     blocks.append(_context(PRIVACY_FOOTER))
     return blocks
 
@@ -115,8 +113,8 @@ def _external_section(external: list[dict]) -> list[dict]:
         return []
     blocks = [
         {"type": "divider"},
-        _section(":telescope: *Outside Experts* — no strong internal match, "
-                 "but your org's vetted consultant directory has:"),
+        _section(":telescope: *Outside Experts* — vetted consultants from "
+                 "your org's directory:"),
     ]
     for e in external:
         blocks.append({

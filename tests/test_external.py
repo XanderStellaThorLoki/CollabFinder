@@ -20,7 +20,7 @@ def test_no_match_returns_empty():
     assert match_external("quantum knitting") == []
 
 
-def test_external_only_offered_when_internal_signal_weak(tmp_path):
+def test_external_always_offered_when_directory_matches(tmp_path):
     signals = [
         {"author": "Sarah Okafor", "topics": ["gdpr", "gdpr compliance"],
          "ts": str(NOW), "channel": "legal-compliance",
@@ -32,11 +32,14 @@ def test_external_only_offered_when_internal_signal_weak(tmp_path):
 
     strong = query_experts("gdpr", store=store)
     assert strong["confidence"] == "high"
-    assert "external" not in strong  # internal expert exists; no upsell
+    assert strong["external"][0]["name"] == "Dr. Ingrid Vasquez"  # rides along
 
     none_at_all = query_experts("patent law", store=store)
     assert none_at_all["confidence"] == "none"
     assert none_at_all["external"][0]["name"] == "Rachel Goldman"
+
+    no_match_anywhere = query_experts("quantum knitting", store=store)
+    assert "external" not in no_match_anywhere  # empty directory match omitted
 
 
 def test_directory_entries_link_out_only():

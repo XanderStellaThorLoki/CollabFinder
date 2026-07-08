@@ -134,18 +134,18 @@ def ack_book_external(ack):
     ack()
 
 
-@app.action("draft_intro")
-def handle_draft_intro(ack, body, respond):
+@app.action(re.compile(r"draft_intro(_\d+)?"))
+def handle_draft_intro(ack, body, respond, client):
     ack()
     expert = body["actions"][0]["value"]
-    asker = body["user"]["id"]
+    asker = _display_name(client, body["user"]["id"])
     draft = (
-        f"Hi {expert} — <@{asker}> here. CollabFinder pointed me your way: "
+        f"Hi {expert} — {asker} here. CollabFinder pointed me your way: "
         f"I'm working on something that overlaps with what you've been discussing, "
         f"and I'd value 15 minutes of your time this week. Any slot that suits you?"
     )
     respond(
-        text=f"Draft intro (copy, tweak, send):\n>{draft}",
+        text=f"Draft intro to {expert} (copy, tweak, send):\n>{draft}",
         response_type="ephemeral",
         replace_original=False,
     )

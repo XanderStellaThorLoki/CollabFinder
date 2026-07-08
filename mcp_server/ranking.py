@@ -105,9 +105,10 @@ def query_experts(topic: str, limit: int = 3, store: ProfileStore | None = None)
     overall = results[0]["confidence"] if results else "none"
     payload = {"query": topic, "confidence": overall, "results": results}
 
-    # Outside Experts: only when internal signal is weak. The tool's first
-    # job is connecting colleagues; paid consults are the fallback, not the
-    # product.
-    if overall in ("none", "low"):
-        payload["external"] = match_external(topic)
+    # Outside Experts always ride along when the org's curated directory has
+    # a match — internal colleagues rank first, but the paid option is
+    # always visible.
+    external = match_external(topic)
+    if external:
+        payload["external"] = external
     return payload
