@@ -14,7 +14,11 @@ from __future__ import annotations
 import os
 import re
 
+import logging
+
 from slack_bolt import App, Assistant
+
+logging.basicConfig(level=logging.INFO)
 
 from mcp_server.ranking import query_experts
 from privacy.optout import OptOutRegistry
@@ -107,8 +111,8 @@ def handle_dm(event, say, logger):
     if event.get("bot_id") or event.get("subtype"):
         return
     logger.info(f"dm from {event.get('user')} in {event.get('channel')}")
-    text = (event.get("text") or "").strip().lower()
-    if text in ("clear", "clear chat", "clear history"):
+    text = (event.get("text") or "").strip().lower().lstrip("#/ ")
+    if text in ("clear", "clear chat", "clear history", "collab clear"):
         n = _clear_bot_messages(app.client, event["channel"])
         say(f"Cleared {n} of my messages from this conversation. "
             "Your own messages are yours to delete — hover a message → ⋮ → Delete.")
