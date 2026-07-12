@@ -39,6 +39,28 @@ def greet(say, set_suggested_prompts):
     ])
 
 
+def _clear_bot_messages(client, channel_id: str) -> int:
+    """Delete every message the bot posted in a conversation. Self-service:
+    users clear their own DM with CollabFinder without anyone's help."""
+    import time as _time
+    deleted = 0
+    cursor = None
+    while True:
+        resp = client.conversations_history(channel=channel_id, limit=200, cursor=cursor)
+        for msg in resp["messages"]:
+            if msg.get("bot_id"):
+                try:
+                    client.chat_delete(channel=channel_id, ts=msg["ts"])
+                    deleted += 1
+                    _time.sleep(0.4)
+                except Exception:
+                    pass
+        cursor = resp.get("response_metadata", {}).get("next_cursor") or None
+        if not cursor:
+            break
+    return deleted
+
+
 def respond_to_text(text: str, say) -> None:
     """One responder for every conversational surface (agent thread + DM)."""
     text = (text or "").strip()
@@ -54,7 +76,8 @@ def respond_to_text(text: str, say) -> None:
             "compliance?* or just name a topic, e.g. *bigquery*. I'll show "
             "who to talk to and why. Curious what I know about you? Ask "
             "exactly that — or check my Home tab for your own profile and a "
-            "one-click opt-out."
+            "one-click opt-out. Type *clear* here any time to wipe my messages "
+            "from this conversation."
         )
         return
     if "know about me" in lowered or "privacy" in lowered:
@@ -75,13 +98,20 @@ app.use(assistant)
 
 
 @app.event("message")
-def handle_dm(event, say):
+def handle_dm(event, say, logger):
     """Plain DMs to the bot (Messages tab) get the same brain as the agent
     pane. Assistant-thread messages are consumed by the middleware above and
     never reach this listener."""
     if event.get("channel_type") != "im":
         return
     if event.get("bot_id") or event.get("subtype"):
+        return
+    logger.info(f"dm from {event.get('user')} in {event.get('channel')}")
+    text = (event.get("text") or "").strip().lower()
+    if text in ("clear", "clear chat", "clear history"):
+        n = _clear_bot_messages(app.client, event["channel"])
+        say(f"Cleared {n} of my messages from this conversation. "
+            "Your own messages are yours to delete — hover a message → ⋮ → Delete.")
         return
     respond_to_text(event.get("text"), say)
 
@@ -120,6 +150,17 @@ def handle_collab(ack, respond, command, client):
     if text == "privacy":
         respond(blocks=blocks.privacy_summary(os.environ.get("COLLABFINDER_CANVAS_URL")),
                 response_type="ephemeral")
+        return
+
+    if text == "clear":
+        if command.get("channel_id", "").startswith("D"):
+            n = _clear_bot_messages(client, command["channel_id"])
+            respond(f"Cleared {n} of my messages from this conversation.",
+                    response_type="ephemeral")
+        else:
+            respond("`/collab clear` works in my DM — channel results are "
+                    "only ever visible to you and disappear on reload.",
+                    response_type="ephemeral")
         return
 
     # Anything else is a topic query. Strip a leading question phrasing.
