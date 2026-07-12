@@ -27,3 +27,5 @@ profiles.json
 optouts.json
 audit_log.jsonl
 signals.json
+query_log.jsonl
+ratings.jsonl
