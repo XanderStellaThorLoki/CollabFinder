@@ -80,6 +80,11 @@ def _confidence(scores: list[float], evidence: dict) -> str:
 
 
 def query_experts(topic: str, limit: int = 3, store: ProfileStore | None = None) -> dict:
+    from .marketplace import log_query
+    try:
+        log_query(topic)  # demand signal for the expert marketplace
+    except Exception:
+        pass
     store = store or ProfileStore()
     profiles = store.load_all()
     query_terms = [t for t in topic.lower().split() if len(t) > 1]

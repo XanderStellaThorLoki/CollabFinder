@@ -34,6 +34,68 @@ def query_experts_rest(
     return query_experts(topic, limit)
 
 
+@app.get("/market/demand")
+def market_demand(field: str = Query(..., min_length=2)) -> dict:
+    """Shown to experts at signup: recent query volume for their field, so
+    bids can price demand rationally."""
+    from .marketplace import demand
+    return demand(field)
+
+
+@app.post("/expert/{slug}/bid")
+def change_bid(slug: str, percent: int = Query(..., ge=1, le=100),
+               key: str = Query(...)) -> dict:
+    """Expert self-serve bid adjustment — the marketplace lever. Clamped to
+    the 10-50% platform band, effective immediately."""
+    from fastapi import HTTPException
+    from .marketplace import update_bid
+    try:
+        return update_bid(slug, percent, key)
+    except PermissionError:
+        raise HTTPException(status_code=403, detail="invalid bid key")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="unknown expert")
+
+
+@app.post("/booking/{slug}/close")
+def close_booking(slug: str, slack_user_id: str = Query(...),
+                  booking_ref: str = Query("")) -> dict:
+    """Deal close: trigger the Rate-your-Expert-Experience flow. The buyer
+    gets a rating card in Slack; the seller rates via POST /rating."""
+    import os as _os
+    from slack_sdk import WebClient
+    client = WebClient(token=_os.environ["SLACK_BOT_TOKEN"])
+    expert = next((e for e in _load_directory() if e.get("slug") == slug), None)
+    if not expert:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="unknown expert")
+    client.chat_postMessage(
+        channel=slack_user_id,
+        text=f"How was your consultation with {expert['name']}?",
+        blocks=[
+            {"type": "section", "text": {"type": "mrkdwn", "text":
+                f"*Rate your Expert Experience*\nYour consultation with "
+                f"*{expert['name']}* is closed. How was it?"}},
+            {"type": "actions", "elements": [
+                {"type": "button", "action_id": f"rate_expert_{n}",
+                 "text": {"type": "plain_text", "text": "★" * n},
+                 "value": f"{slug}|{n}|{booking_ref}"}
+                for n in range(1, 6)
+            ]},
+        ],
+    )
+    return {"status": "rating_requested", "expert": slug}
+
+
+@app.post("/rating")
+def post_rating(expert: str = Query(...), stars: int = Query(..., ge=1, le=5),
+                rater: str = Query(...), booking_ref: str = Query("")) -> dict:
+    """Both sides of the deal rate at close; the seller (expert) posts here
+    from their payout page, the buyer usually rates via the Slack card."""
+    from .marketplace import add_rating
+    return add_rating(expert, stars, rater, booking_ref)
+
+
 @app.get("/book/{slug}", response_class=HTMLResponse)
 def booking_page(slug: str, q: str = "") -> str:
     """CollabFinder's own booking page. All consultation payments run through

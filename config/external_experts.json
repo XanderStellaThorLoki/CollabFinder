@@ -1,5 +1,5 @@
 {
-  "_comment": "CollabFinder's trusted expert directory - platform-curated and credential-verified by CollabFinder. Offered when the workspace's own signal can't answer. Booking and payment run through CollabFinder (platform checkout, commission withheld per commission_percent, which each expert sets at signup (10% platform minimum); higher commission buys higher placement among matching experts); see docs/outside-experts.md. Entries here are fictional samples for the demo.",
+  "_comment": "CollabFinder's trusted expert directory - platform-curated and credential-verified by CollabFinder. Offered when the workspace's own signal can't answer. Booking and payment run through CollabFinder. commission_percent is the expert's own bid (10% floor, changeable any time via POST /expert/<slug>/bid with their bid_key) and is used ONLY to break ties between equally-matched experts. Two-sided ratings at deal close; demand stats at signup via GET /market/demand. Entries are fictional demo samples.",
   "experts": [
     {
       "name": "Dr. Ingrid Vasquez",
@@ -10,7 +10,8 @@
       "status": "verified",
       "verified_on": "2026-06-12",
       "commission_percent": 22,
-      "slug": "ingrid-vasquez"
+      "slug": "ingrid-vasquez",
+      "bid_key": "bk-04dd440ae54f"
     },
     {
       "name": "Marcus Chen",
@@ -21,7 +22,8 @@
       "status": "verified",
       "verified_on": "2026-05-28",
       "commission_percent": 12,
-      "slug": "marcus-chen"
+      "slug": "marcus-chen",
+      "bid_key": "bk-09a482365a0c"
     },
     {
       "name": "Amara Osei",
@@ -32,7 +34,8 @@
       "status": "verified",
       "verified_on": "2026-06-03",
       "commission_percent": 15,
-      "slug": "amara-osei"
+      "slug": "amara-osei",
+      "bid_key": "bk-e0875b125e93"
     },
     {
       "name": "Viktor Lindqvist",
@@ -43,7 +46,8 @@
       "status": "verified",
       "verified_on": "2026-04-19",
       "commission_percent": 25,
-      "slug": "viktor-lindqvist"
+      "slug": "viktor-lindqvist",
+      "bid_key": "bk-4e1627890aac"
     },
     {
       "name": "Rachel Goldman",
@@ -54,7 +58,8 @@
       "status": "verified",
       "verified_on": "2026-06-20",
       "commission_percent": 18,
-      "slug": "rachel-goldman"
+      "slug": "rachel-goldman",
+      "bid_key": "bk-0e2fa6c6eee1"
     },
     {
       "name": "Tomás Herrera",
@@ -65,7 +70,8 @@
       "status": "verified",
       "verified_on": "2026-05-05",
       "commission_percent": 20,
-      "slug": "tomas-herrera"
+      "slug": "tomas-herrera",
+      "bid_key": "bk-c93ff404e30e"
     }
   ]
 }

@@ -27,10 +27,25 @@ An entry moves `pending → verified` only after:
   date checked; re-verified annually.
 - **Reference check** — two client references interviewed.
 - **Rate + agreement** — signed referral agreement and conduct standards.
-  The expert sets their own commission rate at signup (10% platform
-  minimum). Commission is a placement bid: among experts matching a query,
-  the highest commission appears first. Relevance still gates entry — no
-  commission puts an expert on a topic they don't cover.
+  The expert sets their own commission bid at signup (10% floor, 50%
+  ceiling). **Relevance ranks results; the bid only breaks ties** between
+  equally-matched experts. No bid puts an expert on a topic they don't
+  cover.
+
+## Marketplace dynamics
+
+- **Bids move.** Experts change their bid any time (self-serve,
+  `POST /expert/<slug>/bid` with their key; effective immediately). The
+  expected behaviour is market-shaped: when work in a category is snapped
+  up fast, bids creep up to win the tie-breaks; when a category is quiet
+  or oversaturated with talent, bids drift down.
+- **Demand is visible at signup.** Every expertise query is logged (topic
+  and timestamp only). `GET /market/demand?field=...` tells a prospective
+  expert the recent volume of work touching their field — e.g. "27 queries
+  in the last 30 days, demand: high" — so bids price real demand, not
+  guesswork.
+- **Ratings gate quality.** See §5: two-sided ratings at deal close, shown
+  on expert cards and booking pages.
 
 Directory schema per entry: `status` (`pending|verified|suspended`),
 `verified_on`, `commission_percent`. **Only `verified` entries are ever
@@ -67,9 +82,15 @@ Build phases:
 3. **Escrow release (scale)** — funds held until the consultation is
    confirmed delivered; dispute window before expert payout.
 
-## 5. Quality loop
+## 5. Rate your Expert Experience (two-sided, at deal close)
 
-- Post-consult, the booking employee gets a 1–5 rating prompt in Slack.
-- Ratings feed directory ranking (matched_on overlap × rating).
-- Two consecutive ratings ≤2 triggers review; substantiated misconduct →
+When a deal closes (`POST /booking/<slug>/close`):
+
+- **Buyer side** — the booking employee gets a 1–5 star card in Slack;
+  one tap records the rating.
+- **Seller side** — the expert rates the engagement from their payout page
+  (`POST /rating` with `rater=seller`). Experts rating buyers keeps the
+  marketplace honest in both directions.
+- Averages show on expert cards and booking pages. Two consecutive
+  buyer ratings ≤2 triggers review; substantiated misconduct →
   `suspended`.

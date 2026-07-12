@@ -185,6 +185,21 @@ def handle_dismiss(ack, respond):
     respond(delete_original=True)
 
 
+@app.action(re.compile(r"rate_expert_[1-5]"))
+def handle_rate_expert(ack, body, respond):
+    """Buyer side of Rate-your-Expert-Experience: star buttons on the
+    deal-close card. Seller rates via the platform's /rating endpoint."""
+    ack()
+    from mcp_server.marketplace import add_rating
+    slug, stars, booking_ref = (body["actions"][0]["value"].split("|") + [""])[:3]
+    add_rating(slug, int(stars), rater="buyer", booking_ref=booking_ref)
+    respond(
+        text=f"Thanks — {stars}★ recorded. Ratings shape which experts "
+             "CollabFinder keeps recommending.",
+        replace_original=True,
+    )
+
+
 @app.action(re.compile(r"book_external_.*"))
 def ack_book_external(ack, body):
     # URL buttons open the link client-side; Slack still expects an ack.

@@ -12,13 +12,11 @@ NOW = 1_800_000_000.0
 
 
 def test_matches_on_field_words():
-    # "patent law" matches Rachel (patent law) AND Ingrid (data protection
-    # law); Ingrid's higher commission bid (22 > 18) buys first placement.
+    # Relevance first: Rachel matches both words (patent, law), Ingrid only
+    # one (law) — Rachel places first despite Ingrid's higher bid.
     results = match_external("patent law question")
     names = [r["name"] for r in results]
-    assert names == ["Dr. Ingrid Vasquez", "Rachel Goldman"]
-    # A term only Rachel covers puts her first regardless of bids.
-    assert match_external("trademark strategy")[0]["name"] == "Rachel Goldman"
+    assert names == ["Rachel Goldman", "Dr. Ingrid Vasquez"]
 
 
 def test_no_match_returns_empty():

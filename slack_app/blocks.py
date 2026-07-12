@@ -130,6 +130,8 @@ def _external_section(external: list[dict]) -> list[dict]:
         # without it will show the shortcode as text — upload the emoji on
         # install.
         verified = f" · :baoigheallain-crest: verified {e['verified_on']}" if e.get("status") == "verified" else ""
+        if e.get("rating"):
+            verified += f" · ★ {e['rating']['avg']} ({e['rating']['count']})"
         blocks.append({
             "type": "section",
             "text": {"type": "mrkdwn", "text": (
