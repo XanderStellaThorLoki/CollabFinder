@@ -169,6 +169,14 @@ def handle_collab(ack, respond, command, client):
     respond(blocks=blocks.expert_results(result), response_type="ephemeral")
 
 
+@app.action("dismiss_result")
+def handle_dismiss(ack, respond):
+    """Delete the suggestion the button lives on — works for DM messages and
+    ephemeral channel results alike via the response_url."""
+    ack()
+    respond(delete_original=True)
+
+
 @app.action(re.compile(r"book_external_.*"))
 def ack_book_external(ack, body):
     # URL buttons open the link client-side; Slack still expects an ack.

@@ -50,6 +50,14 @@ def expert_results(payload: dict) -> list[dict]:
             "Signal is thin — treat these as leads, not answers."
         ))
     blocks.extend(_external_section(payload.get("external", [])))
+    blocks.append({
+        "type": "actions",
+        "elements": [{
+            "type": "button",
+            "text": {"type": "plain_text", "text": "Dismiss 🗑"},
+            "action_id": "dismiss_result",
+        }],
+    })
     blocks.append(_context(PRIVACY_FOOTER))
     return blocks
 
