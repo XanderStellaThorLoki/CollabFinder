@@ -114,8 +114,12 @@ def handle_dm(event, say, logger):
     text = (event.get("text") or "").strip().lower().lstrip("#/ ")
     if text in ("clear", "clear chat", "clear history", "collab clear"):
         n = _clear_bot_messages(app.client, event["channel"])
-        say(f"Cleared {n} of my messages from this conversation. "
-            "Your own messages are yours to delete — hover a message → ⋮ → Delete.")
+        # Ephemeral: the confirmation itself must not repollute the chat.
+        app.client.chat_postEphemeral(
+            channel=event["channel"], user=event["user"],
+            text=(f"Cleared {n} of my messages. This note is only visible to "
+                  "you and disappears on reload. Your own messages: hover → ⋮ → Delete."),
+        )
         return
     respond_to_text(event.get("text"), say)
 
