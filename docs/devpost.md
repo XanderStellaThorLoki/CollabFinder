@@ -12,7 +12,7 @@ Query surfaces: `/collab <topic>`, DM, the agent pane, an App Home search box, a
 
 Scoring: authored threads weigh 3.0 (plus a bonus per reply received), thread replies 2.0, standalone messages 1.0, questions 0.5. Scores decay with a 90-day half-life. Results state the evidence ("authored 3 threads in #legal-compliance, drew 12 replies") and a confidence band. A profile whose only evidence is asking questions is capped at low confidence. Queries with no matching signal return an empty result.
 
-If the org's consultant directory matches the topic, results also include an external consultant: name, credentials, rate, booking link. Only directory entries with verified credentials are shown. Booking links carry a referral tag and clicks are logged; the platform charges the consultant a commission on referred business. Consultation payment happens on the consultant's own booking page.
+Results can also include a consultant from CollabFinder's own trusted-expert directory: name, credentials, rate, and a booking link. Experts are recruited and credential-verified by the platform; only verified entries are shown. Booking and payment run through CollabFinder's hosted booking page — the platform withholds a commission on every booking and pays out the expert (Stripe capture is the launch build; the booking flow and attribution logging are implemented).
 
 Privacy controls: only public channels and @mentions are read, which the bot's OAuth scopes enforce (`search:read.public`, `channels:history`). Message content is never quoted in results. Channels under org-configured expanded monitoring get a pinned notice. `/collab opt-out` removes a user from indexing and results immediately; the App Home tab shows each user their own indexed topics and opt-out state. Indexer reads are logged.
 
@@ -46,7 +46,7 @@ Reply and thread structure carries more expertise signal than message frequency.
 
 ## What's next for CollabFinder
 
-- Stripe Connect for commission collection from consultants
+- Stripe checkout on the booking page: automatic commission withholding and expert payouts
 - Team gap analysis against a project brief
 - Onboarding suggestions for new hires
 - Alerts when a topic's only active expert goes inactive

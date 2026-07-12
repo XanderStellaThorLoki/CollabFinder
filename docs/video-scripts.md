@@ -46,7 +46,8 @@ a "HOLD" appears — that space is for the voiceover.
 1. Still in the conversation, type: `patent law` → Enter.
 2. Wait for the response. HOLD 4s on "No clear expert signal".
 3. Move cursor down to the Outside Experts section — Rachel Goldman card.
-4. Hover the **Book consult ↗** button. Do NOT click. HOLD 4s.
+4. Click **Book consult ↗** — the CollabFinder booking page opens (rate,
+   verification, commission line). HOLD 5s on the page, then close the tab.
 
 **CLIP 5 — Privacy (≈45s)**
 1. Click #legal-compliance. Click the pinned message bar at the top of the
@@ -91,10 +92,11 @@ early, let the screen breathe — don't rush into the next block.
 > out on top.
 
 **CLIP 4 (20s)**
-> And when nobody in the org has the answer, it says so — no fake
-> confidence. Instead, it offers a credential-verified outside consultant
-> from the company's own directory. Booking happens on the expert's page.
-> Payment never touches CollabFinder.
+> And when nobody in the company has the answer, it says so — no fake
+> confidence. Then CollabFinder's own directory of trusted, verified
+> experts steps in. Booking and payment run through CollabFinder — we vet
+> the expert, we process the payment, and we take our commission on every
+> booking.
 
 **CLIP 5 (45s)**
 > Privacy is enforced, not promised. The bot's own Slack permissions make

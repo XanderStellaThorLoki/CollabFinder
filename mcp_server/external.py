@@ -29,14 +29,20 @@ def _load_directory(path: Path | str | None = None) -> list[dict]:
     return json.loads(p.read_text(encoding="utf-8")).get("experts", [])
 
 
+BASE_URL = os.environ.get(
+    "COLLABFINDER_BASE_URL",
+    "https://collabfinder-mcp-658446182420.us-central1.run.app",
+)
+
+
 def _referral_url(expert: dict, topic: str) -> str:
-    """Booking link tagged for referral attribution — the click log plus this
-    tag are the billing evidence behind the platform's commission on
-    referred business. No personal data in the params: topic only."""
+    """CollabFinder-hosted booking page for this expert. All booking and
+    payment flows through the platform (commission withheld); the topic tag
+    attributes the booking to the query that produced it. No personal data
+    in the params."""
     from urllib.parse import quote_plus
-    sep = "&" if "?" in expert["booking_url"] else "?"
-    return (f"{expert['booking_url']}{sep}ref=collabfinder"
-            f"&q={quote_plus(topic.lower()[:80])}")
+    slug = expert.get("slug") or expert["name"].lower().replace(" ", "-")
+    return f"{BASE_URL}/book/{slug}?q={quote_plus(topic.lower()[:80])}"
 
 
 def match_external(topic: str, limit: int = 2, path: Path | str | None = None) -> list[dict]:

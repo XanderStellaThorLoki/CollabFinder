@@ -1,11 +1,13 @@
 # Outside Experts — program design
 
-The Outside Expert directory is the revenue layer of CollabFinder: when the
-org's internal expertise map can't answer (or a team wants outside firepower),
-CollabFinder surfaces vetted external consultants and earns a commission on
-the business it refers. This document is the operating process; the demo
-implements the attribution layer and directory schema, and marks the payment
-mechanics as post-hackathon build.
+The Outside Expert directory is the revenue layer of CollabFinder. It is
+**CollabFinder's own network** of trusted consultants — recruited, vetted,
+and credential-verified by the platform — made available inside every
+customer workspace when the company's own expertise can't answer. All
+booking and payment runs through CollabFinder, and the platform takes a
+commission on every booking. This document is the operating process; the
+demo implements the directory, attribution, and the platform booking page,
+with Stripe payment capture as the launch build.
 
 ## 1. Expert sign-up (intake)
 
@@ -43,26 +45,24 @@ Suspension path: complaints or failed re-verification flip `status` to
 - The click log + URL tag together form the billing evidence: bookings on
   the expert's side that carry the ref tag reconcile against our click log.
 
-## 4. Commission collection (post-hackathon)
+## 4. Payments and commission
 
-The platform fee is charged to the **expert**, not the person booking —
-the org's employees never pay to use CollabFinder suggestions.
+**All consultation payments run through CollabFinder.** The client books
+and pays on the CollabFinder booking page; the platform withholds its
+commission (per-expert `commission_percent`, default 15%) and pays out the
+remainder to the expert. One invoice, one receipt, one place to resolve
+disputes — the client never handles the expert's own billing.
 
-Planned mechanics, in order of build:
+Build phases:
 
-1. **Invoice reconciliation (launch)** — monthly statement to each expert
-   listing ref-tagged bookings; expert remits the commission percentage.
-   Simple, auditable, no payment infrastructure required.
-2. **Stripe Connect (scale)** — experts onboard to a connected account;
-   bookings flow through the platform checkout and the application fee is
-   withheld automatically at booking time. Removes trust dependency.
-3. **Deposit/escrow option** — high-volume experts maintain a small deposit
-   balance drawn down per referral, refundable on exit. Only if
-   reconciliation friction demands it.
-
-Non-negotiable boundary at every stage: **consultation payment happens on
-the expert's own checkout.** CollabFinder handles attribution and the
-platform fee — it is never custodian of the client's consultation money.
+1. **Booking page (built)** — every expert has a CollabFinder-hosted
+   `/book/<slug>` page showing rate, verification status, and the money
+   flow. Booking requests are recorded with query attribution.
+2. **Stripe payment capture (launch)** — checkout on the booking page;
+   experts onboard via Stripe Connect, the platform's application fee is
+   withheld automatically at charge time, payouts are automatic.
+3. **Escrow release (scale)** — funds held until the consultation is
+   confirmed delivered; dispute window before expert payout.
 
 ## 5. Quality loop
 

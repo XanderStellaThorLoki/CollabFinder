@@ -42,16 +42,18 @@ def test_external_always_offered_when_directory_matches(tmp_path):
     assert "external" not in no_match_anywhere  # empty directory match omitted
 
 
-def test_directory_entries_link_out_only():
-    """The boundary: directory provides booking links, never payment fields."""
+def test_booking_links_are_platform_hosted():
+    """All booking flows through CollabFinder's own pages — that's where the
+    platform takes its commission."""
     for e in match_external("gdpr data protection"):
         assert e["booking_url"].startswith("https://")
-        assert "payment" not in json.dumps(e).lower()
+        assert "/book/" in e["booking_url"]
+        assert e["commission_percent"] > 0
 
 
-def test_referral_attribution_on_booking_links():
+def test_booking_links_carry_query_attribution():
     e = match_external("patent law")[0]
-    assert "ref=collabfinder" in e["booking_url"]
+    assert "/book/rachel-goldman" in e["booking_url"]
     assert "q=patent+law" in e["booking_url"]
 
 

@@ -121,8 +121,8 @@ def _external_section(external: list[dict]) -> list[dict]:
         return []
     blocks = [
         {"type": "divider"},
-        _section(":telescope: *Outside Experts* — vetted consultants from "
-                 "your org's directory:"),
+        _section(":telescope: *Outside Experts* — CollabFinder's directory of "
+                 "trusted, credential-verified consultants:"),
     ]
     for e in external:
         # :baoigheallain-crest: is a custom workspace emoji (the shield +
@@ -145,8 +145,8 @@ def _external_section(external: list[dict]) -> list[dict]:
             },
         })
     blocks.append(_context(
-        "Paid consultation, booked directly with the expert — payment never "
-        "goes through CollabFinder. Directory is curated by your org."
+        "Booked and paid through CollabFinder — every expert is vetted by us, "
+        "and every booking carries our commission. One invoice, one receipt."
     ))
     return blocks
 
