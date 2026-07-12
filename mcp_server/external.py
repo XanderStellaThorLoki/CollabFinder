@@ -47,7 +47,12 @@ def _referral_url(expert: dict, topic: str) -> str:
 
 def match_external(topic: str, limit: int = 2, path: Path | str | None = None) -> list[dict]:
     """Whole-word match of query terms against each expert's field tags.
-    Only credentialed entries (status == verified) are ever offered."""
+    Only credentialed entries (status == verified) are ever offered.
+
+    Ordering is commission-first: experts set their own commission rate at
+    signup, and among experts matching the query, the highest commission
+    wins placement (match strength breaks ties). Relevance still gates
+    entry — no commission buys a spot on a topic the expert doesn't cover."""
     terms = {t for t in topic.lower().replace(",", " ").split() if len(t) > 1}
     results = []
     for expert in _load_directory(path):
@@ -61,5 +66,6 @@ def match_external(topic: str, limit: int = 2, path: Path | str | None = None) -
                 "matched_on": sorted(overlap),
                 "booking_url": _referral_url(expert, topic),
             })
-    results.sort(key=lambda e: len(e["matched_on"]), reverse=True)
+    results.sort(key=lambda e: (e.get("commission_percent", 0), len(e["matched_on"])),
+                 reverse=True)
     return results[:limit]

@@ -43,7 +43,7 @@ a "HOLD" appears — that space is for the voiceover.
 4. HOLD 5s on Maya Chen at #1. (Chris appears nowhere — that's the point.)
 
 **CLIP 4 — Outside Experts (≈20s)**
-1. Still in the conversation, type: `patent law` → Enter.
+1. Still in the conversation, type: `trademark strategy` → Enter.
 2. Wait for the response. HOLD 4s on "No clear expert signal".
 3. Move cursor down to the Outside Experts section — Rachel Goldman card.
 4. Click **Book consult ↗** — the CollabFinder booking page opens (rate,

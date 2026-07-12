@@ -12,8 +12,13 @@ NOW = 1_800_000_000.0
 
 
 def test_matches_on_field_words():
+    # "patent law" matches Rachel (patent law) AND Ingrid (data protection
+    # law); Ingrid's higher commission bid (22 > 18) buys first placement.
     results = match_external("patent law question")
-    assert results and results[0]["name"] == "Rachel Goldman"
+    names = [r["name"] for r in results]
+    assert names == ["Dr. Ingrid Vasquez", "Rachel Goldman"]
+    # A term only Rachel covers puts her first regardless of bids.
+    assert match_external("trademark strategy")[0]["name"] == "Rachel Goldman"
 
 
 def test_no_match_returns_empty():
@@ -34,7 +39,7 @@ def test_external_always_offered_when_directory_matches(tmp_path):
     assert strong["confidence"] == "high"
     assert strong["external"][0]["name"] == "Dr. Ingrid Vasquez"  # rides along
 
-    none_at_all = query_experts("patent law", store=store)
+    none_at_all = query_experts("trademark strategy", store=store)
     assert none_at_all["confidence"] == "none"
     assert none_at_all["external"][0]["name"] == "Rachel Goldman"
 
@@ -52,9 +57,26 @@ def test_booking_links_are_platform_hosted():
 
 
 def test_booking_links_carry_query_attribution():
-    e = match_external("patent law")[0]
+    e = match_external("trademark strategy")[0]
     assert "/book/rachel-goldman" in e["booking_url"]
-    assert "q=patent+law" in e["booking_url"]
+    assert "q=trademark+strategy" in e["booking_url"]
+
+
+def test_highest_commission_ranks_first(tmp_path):
+    """Experts bid their commission; among matches, highest bid places first —
+    but only matching experts appear at all."""
+    directory = tmp_path / "experts.json"
+    directory.write_text(json.dumps({"experts": [
+        {"name": "Low Bid", "field": "gdpr", "credentials": "c", "rate": "$1/hr",
+         "slug": "low", "status": "verified", "commission_percent": 10},
+        {"name": "High Bid", "field": "gdpr", "credentials": "c", "rate": "$1/hr",
+         "slug": "high", "status": "verified", "commission_percent": 30},
+        {"name": "Rich Irrelevant", "field": "carpentry", "credentials": "c",
+         "rate": "$1/hr", "slug": "rich", "status": "verified",
+         "commission_percent": 90},
+    ]}), encoding="utf-8")
+    names = [e["name"] for e in match_external("gdpr", path=directory)]
+    assert names == ["High Bid", "Low Bid"]  # commission order, no pay-to-enter
 
 
 def test_only_verified_experts_offered(tmp_path):

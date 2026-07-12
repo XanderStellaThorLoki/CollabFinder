@@ -1,5 +1,5 @@
 {
-  "_comment": "CollabFinder's trusted expert directory - platform-curated and credential-verified by CollabFinder. Offered when the workspace's own signal can't answer. Booking and payment run through CollabFinder (platform checkout, commission withheld per commission_percent); see docs/outside-experts.md. Entries here are fictional samples for the demo.",
+  "_comment": "CollabFinder's trusted expert directory - platform-curated and credential-verified by CollabFinder. Offered when the workspace's own signal can't answer. Booking and payment run through CollabFinder (platform checkout, commission withheld per commission_percent, which each expert sets at signup (10% platform minimum); higher commission buys higher placement among matching experts); see docs/outside-experts.md. Entries here are fictional samples for the demo.",
   "experts": [
     {
       "name": "Dr. Ingrid Vasquez",
@@ -9,7 +9,7 @@
       "booking_url": "/book/ingrid-vasquez",
       "status": "verified",
       "verified_on": "2026-06-12",
-      "commission_percent": 15,
+      "commission_percent": 22,
       "slug": "ingrid-vasquez"
     },
     {
@@ -20,7 +20,7 @@
       "booking_url": "/book/marcus-chen",
       "status": "verified",
       "verified_on": "2026-05-28",
-      "commission_percent": 15,
+      "commission_percent": 12,
       "slug": "marcus-chen"
     },
     {
@@ -42,7 +42,7 @@
       "booking_url": "/book/viktor-lindqvist",
       "status": "verified",
       "verified_on": "2026-04-19",
-      "commission_percent": 15,
+      "commission_percent": 25,
       "slug": "viktor-lindqvist"
     },
     {
@@ -53,7 +53,7 @@
       "booking_url": "/book/rachel-goldman",
       "status": "verified",
       "verified_on": "2026-06-20",
-      "commission_percent": 15,
+      "commission_percent": 18,
       "slug": "rachel-goldman"
     },
     {
@@ -64,7 +64,7 @@
       "booking_url": "/book/tomas-herrera",
       "status": "verified",
       "verified_on": "2026-05-05",
-      "commission_percent": 15,
+      "commission_percent": 20,
       "slug": "tomas-herrera"
     }
   ]

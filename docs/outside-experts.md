@@ -26,8 +26,11 @@ An entry moves `pending → verified` only after:
   registries (e.g. USPTO bar, (ISC)² for CISSP, IAAP). Recorded with the
   date checked; re-verified annually.
 - **Reference check** — two client references interviewed.
-- **Rate + agreement** — signed referral agreement (commission percentage,
-  currently 15%) and conduct standards.
+- **Rate + agreement** — signed referral agreement and conduct standards.
+  The expert sets their own commission rate at signup (10% platform
+  minimum). Commission is a placement bid: among experts matching a query,
+  the highest commission appears first. Relevance still gates entry — no
+  commission puts an expert on a topic they don't cover.
 
 Directory schema per entry: `status` (`pending|verified|suspended`),
 `verified_on`, `commission_percent`. **Only `verified` entries are ever
@@ -48,9 +51,9 @@ Suspension path: complaints or failed re-verification flip `status` to
 ## 4. Payments and commission
 
 **All consultation payments run through CollabFinder.** The client books
-and pays on the CollabFinder booking page; the platform withholds its
-commission (per-expert `commission_percent`, default 15%) and pays out the
-remainder to the expert. One invoice, one receipt, one place to resolve
+and pays on the CollabFinder booking page; the platform withholds the
+expert's own bid commission (`commission_percent`, expert-set, 10%
+minimum) and pays out the remainder. One invoice, one receipt, one place to resolve
 disputes — the client never handles the expert's own billing.
 
 Build phases:
