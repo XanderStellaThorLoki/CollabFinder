@@ -42,17 +42,23 @@ def post_banner(client: WebClient, channel_name: str) -> str:
     return resp["ts"]
 
 
-def remove_banner(client: WebClient, channel_name: str) -> int:
-    """Unpin and delete every banner message the bot posted in the channel."""
+def remove_banner(client: WebClient, channel_name: str, keep_ts: str | None = None) -> int:
+    """Delete every banner message the bot posted in the channel (deleting a
+    pinned message also removes its pin). Scans history rather than pins.list
+    so it only needs channels:history, not pins:read."""
     channel_id = _find_channel(client, channel_name)
     removed = 0
-    pins = client.pins_list(channel=channel_id)
-    for item in pins.get("items", []):
-        msg = item.get("message", {})
-        if "AI-monitored" in msg.get("text", ""):
-            client.pins_remove(channel=channel_id, timestamp=msg["ts"])
-            client.chat_delete(channel=channel_id, ts=msg["ts"])
-            removed += 1
+    cursor = None
+    while True:
+        resp = client.conversations_history(channel=channel_id, limit=200, cursor=cursor)
+        for msg in resp["messages"]:
+            if (msg.get("bot_id") and "AI-monitored" in msg.get("text", "")
+                    and msg["ts"] != keep_ts):
+                client.chat_delete(channel=channel_id, ts=msg["ts"])
+                removed += 1
+        cursor = resp.get("response_metadata", {}).get("next_cursor") or None
+        if not cursor:
+            break
     return removed
 
 
