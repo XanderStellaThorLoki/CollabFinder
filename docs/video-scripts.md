@@ -59,9 +59,19 @@ a "HOLD" appears — that space is for the voiceover.
    the opted-out state.
 6. Click **Opt back in**. HOLD 3s.
 
-**CLIP 6 — Close (≈25s)**
+**CLIP 6 — The marketplace: rate your Expert Experience (≈25s)**
+Coordinate with Claude: say "fire the rating card" right before recording —
+the deal-close event sends the card to your DM within a second or two.
+1. Be in the CollabFinder DM. The "Rate your Expert Experience" card for
+   Rachel Goldman arrives. HOLD 3s.
+2. Click the ★★★★★ (5-star) button. The card is replaced by the thank-you
+   line. HOLD 3s.
+3. Type `trademark strategy` → Enter. Rachel's card now shows
+   "★ 5.0 (1)" next to her verified crest. HOLD 4s on that line.
+
+**CLIP 7 — Close (≈15s)**
 1. Switch to the browser tab with the architecture diagram.
-2. Slowly scroll or hold full screen. HOLD 8s minimum.
+2. Hold full screen, still. HOLD 10s minimum.
 
 ---
 
@@ -108,15 +118,23 @@ early, let the screen breathe — don't rush into the next block.
 > Opting back in is just as easy.
 
 **CLIP 6 (25s)**
-> Under the hood: a public-only indexer, an expertise model that rewards
-> depth over volume, and one ranking engine serving four surfaces — the
-> slash command, the agent conversation, the Home tab, and an MCP server
-> on Cloud Run that any agent can call. Built for the Slack Agent Builder
+> The expert directory is a real marketplace. Experts set their own
+> commission bid — it breaks ties between equally-matched experts, and
+> they can change it any time as demand shifts. At signup they see live
+> demand data for their field. And when a deal closes, both sides rate
+> the experience — one tap for the buyer, right in Slack — and that
+> rating follows the expert onto every future card.
+
+**CLIP 7 (15s)**
+> One ranking engine, four surfaces, an MCP server any agent can call,
+> and a marketplace behind it. Built for the Slack Agent Builder
 > Challenge. CollabFinder — because ambition without guidance is a path
 > to career stagnation.
 
 ---
 
-**Assembly:** trim clip heads/tails, join in order, lay the six VO blocks
-over their clips, nudge holds to fit. Export 1080p MP4, under 3:00.
-Upload to YouTube as **Public**.
+**Assembly:** trim clip heads/tails, join in order, lay the seven VO blocks
+over their clips, nudge holds to fit. Budget: 15+40+25+20+45+25+15 = 185s —
+that is 3:05, so tighten in edit: shave ~5s each from Clips 2 and 5 (the
+long holds) to land ≈2:55. HARD CAP 3:00. Export 1080p MP4. Upload to
+YouTube as **Public**.
