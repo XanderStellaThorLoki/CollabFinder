@@ -80,61 +80,43 @@ the deal-close event sends the card to your DM within a second or two.
 Read at a relaxed pace. Each block matches its clip; if you finish a line
 early, let the screen breathe — don't rush into the next block.
 
-**CLIP 1 (15s)**
-> This is a company Slack. Nine channels, ten people, months of
-> conversation. Somewhere in here is the answer to the most common
-> unanswered question at work: who should I talk to about this?
+**CLIP 1 (10s)**
+> A company Slack. Nine channels, ten people, months of conversation.
+> Somewhere in here is the answer to: who should I talk to about this?
 
-**CLIP 2 (40s)**
-> CollabFinder answers it. Ask in plain language — who knows about GDPR
-> compliance — and you get a person, not a list. Sarah authored the GDPR
-> threads other people replied to. High confidence, and it shows its
-> evidence. Second place is instructive: Tom only *asked* about GDPR, so
-> he's ranked low and labeled honestly — asking is interest, not
-> expertise. One click drafts the intro message, so reaching out stops
-> being the hard part.
+**CLIP 2 (30s)**
+> Ask CollabFinder. You get a person, with evidence. Sarah authored the
+> GDPR threads other people reply to — high confidence. Tom only *asked*
+> about GDPR — ranked low, and labeled exactly that. Asking isn't
+> expertise. One click drafts the intro.
 
-**CLIP 3 (25s)**
-> The loudest person in this workspace posts everywhere, constantly. He
-> never ranks first. CollabFinder weighs threads people author and
-> questions they answer — not message count. When we ask about
-> accessibility, the quieter engineer who actually did the work comes
-> out on top.
+**CLIP 3 (18s)**
+> The loudest poster in this workspace never ranks first. CollabFinder
+> weighs threads authored and questions answered — not message count.
 
-**CLIP 4 (20s)**
-> And when nobody in the company has the answer, it says so — no fake
-> confidence. Then CollabFinder's own directory of trusted, verified
-> experts steps in. Booking and payment run through CollabFinder — we vet
-> the expert, we process the payment, and we take our commission on every
-> booking.
+**CLIP 4 (15s)**
+> No expert in the company? It says so. Then offers a consultant from
+> CollabFinder's vetted directory. Booking and payment run through us —
+> commission on every deal.
 
-**CLIP 5 (45s)**
-> Privacy is enforced, not promised. The bot's own Slack permissions make
-> private channels and DMs unreadable — it only sees public activity. Any
-> channel under expanded monitoring carries this pinned banner: no banner,
-> no monitoring. And every person can see exactly what CollabFinder knows
-> about them — their own topics, on their own Home tab — with a one-click
-> opt-out that takes effect immediately, at indexing and at query time.
-> Opting back in is just as easy.
+**CLIP 5 (30s)**
+> Privacy is enforced by permissions, not policy. Public channels only —
+> the bot can't read anything else. Monitored channels carry a pinned
+> banner: no banner, no monitoring. Everyone sees their own profile, and
+> opt-out is one click, effective immediately.
 
-**CLIP 6 (25s)**
-> The expert directory is a real marketplace. Experts set their own
-> commission bid — it breaks ties between equally-matched experts, and
-> they can change it any time as demand shifts. At signup they see live
-> demand data for their field. And when a deal closes, both sides rate
-> the experience — one tap for the buyer, right in Slack — and that
-> rating follows the expert onto every future card.
+**CLIP 6 (18s)**
+> The directory is a marketplace. Experts bid their own commission — it
+> breaks ties and moves with demand. Deals close with two-sided ratings.
+> One tap, in Slack, and it follows the expert everywhere.
 
-**CLIP 7 (15s)**
-> One ranking engine, four surfaces, an MCP server any agent can call,
-> and a marketplace behind it. Built for the Slack Agent Builder
-> Challenge. CollabFinder — because ambition without guidance is a path
-> to career stagnation.
+**CLIP 7 (12s)**
+> One engine. Four surfaces. An MCP server any agent can call.
+> CollabFinder — built for the Slack Agent Builder Challenge.
 
 ---
 
-**Assembly:** trim clip heads/tails, join in order, lay the seven VO blocks
-over their clips, nudge holds to fit. Budget: 15+40+25+20+45+25+15 = 185s —
-that is 3:05, so tighten in edit: shave ~5s each from Clips 2 and 5 (the
-long holds) to land ≈2:55. HARD CAP 3:00. Export 1080p MP4. Upload to
-YouTube as **Public**.
+**Assembly:** the audio leads. Record the seven VO blocks first
+(10+30+18+15+30+18+12 ≈ 2:13), then trim each filmed clip to its VO block —
+cut footage to fit audio, never stretch audio to fit footage. Target ≈2:15,
+hard cap 3:00. Export 1080p MP4. Upload to YouTube as **Public**.
